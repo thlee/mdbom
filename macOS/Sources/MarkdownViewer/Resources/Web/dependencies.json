@@ -1,0 +1,55 @@
+{
+  "generatedBy": "npm run bundle",
+  "packages": [
+    {
+      "name": "markdown-it",
+      "version": "15.0.2",
+      "license": "MIT"
+    },
+    {
+      "name": "dompurify",
+      "version": "3.4.15",
+      "license": "(MPL-2.0 OR Apache-2.0)"
+    },
+    {
+      "name": "highlight.js",
+      "version": "11.12.0",
+      "license": "BSD-3-Clause"
+    },
+    {
+      "name": "argparse",
+      "version": "3.0.2",
+      "license": "PSF-2.0"
+    },
+    {
+      "name": "entities",
+      "version": "8.1.0",
+      "license": "BSD-2-Clause"
+    },
+    {
+      "name": "linkify-it",
+      "version": "6.1.0",
+      "license": "MIT"
+    },
+    {
+      "name": "mdurl",
+      "version": "2.1.0",
+      "license": "MIT"
+    },
+    {
+      "name": "punycode.js",
+      "version": "2.3.1",
+      "license": "MIT"
+    },
+    {
+      "name": "uc.micro",
+      "version": "3.0.0",
+      "license": "MIT"
+    }
+  ],
+  "viewerJS_SHA256": "cdba1c34e718766e7131b95ddc61d4996e38ea6d1623f9ff1e750de42ac2d11f",
+  "sharedCoreJS_SHA256": "55d52bcc1c51e04c1c8af3989336ffe1b228679a9b280aae793332359fa49fcf",
+  "sharedMarkdownCSS_SHA256": "effec63057bc06aa2a5811ae26662eced1e39ca64897bf255379a4e602452983",
+  "presentationCSS_SHA256": "d02a74b5230a59eacac3362968431d69d0a443b616adeac93e1fcfd1bd1eefe6",
+  "interfaceJSON_SHA256": "e16e66433318ee7d37f4188694c9f67ac1c3b59081b5ca9dea99280d1dcc275d"
+}

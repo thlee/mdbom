@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+ <meta charset="utf-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+ <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src https://document.markdownviewer.invalid data:; connect-src 'none'; font-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none';">
+ <title>엠디봄</title>
+ <link rel="stylesheet" href="markdown.css">
+ <link rel="stylesheet" href="presentation.css">
+ <script src="core.js" defer></script>
+ <script src="viewer.js" defer></script>
+</head>
+<body>
+ <div id="findbar" role="search" hidden>
+  <input id="findinput" type="search" placeholder="Find in document…" aria-label="Find in document" autocomplete="off">
+  <span id="findresult" role="status"></span>
+  <button id="findprevious" title="Previous (Shift+Enter)" aria-label="Previous match">↑</button>
+  <button id="findnext" title="Next (Enter)" aria-label="Next match">↓</button>
+  <button id="findclose" title="Close (Escape)" aria-label="Close find">×</button>
+ </div>
+ <div id="notice" role="status" hidden><span></span><button aria-label="Dismiss notice">×</button></div>
+ <main id="welcome">
+  <div class="monogram" aria-hidden="true">M<span>↓</span></div>
+  <p class="eyebrow">엠디봄 · MDBom</p>
+  <h1>마크다운 문서를 가볍게 보다.</h1>
+  <p class="welcome-description">문서를 열면 바로 읽기 좋게.<br>모든 파일은 내 컴퓨터 안에 그대로.</p>
+  <button id="openfile" class="primary">Open a Markdown file <span>↗</span></button>
+  <p class="drop-hint">or drop a <strong>.md</strong> or <strong>.markdown</strong> file anywhere</p>
+  <div class="features"><span>Tables &amp; checklists</span><span>Highlighted code</span><span>Light &amp; dark</span></div>
+  <p class="shortcut"><kbd>Ctrl</kbd> + <kbd>O</kbd> to open</p>
+ </main>
+ <main id="reader" hidden>
+  <div class="document-meta"><span id="documentname"></span><span id="documentmode">LOCAL DOCUMENT</span></div>
+  <article id="content" class="markdown-body" aria-label="Markdown document"></article>
+  <pre id="sourcecontent" class="source-body" tabindex="0" aria-label="Markdown source, read only" hidden></pre>
+  <p id="sourceempty" class="empty-document" hidden>This document is empty.</p>
+  <footer class="document-end"><span></span> End of document <span></span></footer>
+ </main>
+ <div id="dropoverlay" hidden><div>Drop to open<span>Markdown files · Read only</span></div></div>
+</body>
+</html>

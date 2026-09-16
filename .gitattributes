@@ -1,0 +1,7 @@
+* text=auto eol=lf
+*.png binary
+*.ico binary
+*.icns binary
+
+Shared/Renderer/Resources/Web/core.js -whitespace linguist-generated=true
+macOS/Sources/MarkdownViewer/Resources/Web/viewer.js -whitespace linguist-generated=true

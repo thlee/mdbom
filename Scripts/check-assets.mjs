@@ -1,0 +1,22 @@
+import { readFile } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
+import { resolve, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import assert from 'node:assert/strict';
+
+const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const shared = resolve(root, 'Shared/Renderer/Resources/Web');
+const mac = resolve(root, 'macOS/Sources/MarkdownViewer/Resources/Web');
+const manifest = JSON.parse(await readFile(resolve(shared, 'dependencies.json'), 'utf8'));
+const macManifest = JSON.parse(await readFile(resolve(mac, 'dependencies.json'), 'utf8'));
+const hash = async file => createHash('sha256').update(await readFile(file)).digest('hex');
+assert.equal(await hash(resolve(shared, 'core.js')), manifest.coreJS_SHA256);
+assert.equal(await hash(resolve(shared, 'markdown.css')), manifest.markdownCSS_SHA256);
+assert.equal(manifest.coreJS_SHA256, macManifest.sharedCoreJS_SHA256);
+assert.equal(manifest.markdownCSS_SHA256, macManifest.sharedMarkdownCSS_SHA256);
+assert.equal(await hash(resolve(mac, 'viewer.js')), macManifest.viewerJS_SHA256);
+console.log('Shared core, stylesheet and macOS adapter hashes verified.');
+assert.equal(await hash(resolve(shared, 'presentation.css')), manifest.presentationCSS_SHA256);
+assert.equal(await hash(resolve(shared, 'interface.json')), manifest.interfaceJSON_SHA256);
+assert.equal(manifest.presentationCSS_SHA256, macManifest.presentationCSS_SHA256);
+assert.equal(manifest.interfaceJSON_SHA256, macManifest.interfaceJSON_SHA256);

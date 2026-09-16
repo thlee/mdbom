@@ -1,0 +1,17 @@
+{
+  "name": "markdown-viewer-assets",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Build-time tools for the shared offline macOS and Windows Markdown renderer.",
+  "scripts": {
+    "bundle": "node Scripts/bundle-assets.mjs"
+  },
+  "dependencies": {
+    "markdown-it": "15.0.2",
+    "dompurify": "3.4.15",
+    "highlight.js": "11.12.0"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2"
+  }
+}

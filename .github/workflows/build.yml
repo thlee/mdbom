@@ -1,0 +1,86 @@
+name: Build and verify desktop apps
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+concurrency:
+  group: desktop-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+permissions:
+  contents: read
+jobs:
+  assets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm run bundle
+      - run: node Scripts/check-assets.mjs
+      - run: git diff --exit-code -- Shared/Renderer/Resources macOS/Sources/MarkdownViewer/Resources/Web ThirdPartyLicenses
+  macos:
+    runs-on: macos-14
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - run: ./Scripts/test.sh
+      - name: Package and verify macOS DMG
+        run: ./Scripts/package-dmg.sh
+      - run: ditto -c -k --sequesterRsrc --keepParent "dist/엠디봄.app" dist/MDBom-macOS-arm64.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MDBom-macOS-arm64
+          path: |
+            dist/MDBom-macOS-arm64.zip
+            dist/MDBom-*-macOS-arm64.dmg
+            dist/MDBom-*-macOS-arm64.dmg.sha256
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: macOS-verification
+          path: .build/verification
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - run: dotnet restore Windows/MarkdownViewer.sln --locked-mode
+      - run: dotnet build Windows/MarkdownViewer.sln -c Release --no-restore
+      - run: ./Windows/scripts/Publish.ps1 -OutputDirectory dist/MDBom-win-x64
+      - name: Check installer compatibility
+        shell: powershell
+        run: ./dist/MDBom-win-x64/Install.ps1 -WhatIf
+      - name: Verify Windows WebView2
+        shell: pwsh
+        run: |
+          $app = Start-Process -FilePath "dist/MDBom-win-x64/MarkdownViewer.exe" -ArgumentList @('--smoke-test', "$PWD/dist/windows-verification") -PassThru
+          if (-not $app.WaitForExit(180000)) { $app.Kill(); throw 'Windows validation timed out' }
+          if ($app.ExitCode -ne 0) { throw "Windows validation failed: $($app.ExitCode)" }
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: Windows-verification
+          path: dist/windows-verification
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MDBom-win-x64
+          path: dist/MDBom-win-x64
+
+      - name: Build Windows setup
+        shell: pwsh
+        run: ./Windows/scripts/Build-Installer.ps1 -PublishDirectory dist/MDBom-win-x64 -OutputDirectory dist/installer
+      - name: Verify installer lifecycle
+        shell: pwsh
+        run: ./Windows/scripts/Test-Installer.ps1 -Installer (Get-ChildItem dist/installer/*-Setup-x64.exe).FullName
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MDBom-Windows-Setup-x64
+          path: dist/installer/*
+          if-no-files-found: error

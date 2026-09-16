@@ -1,0 +1,11 @@
+{
+  "width": {"minimum": 600, "maximum": 1800, "step": 20, "readingDefault": 920, "sourceDefault": 1200},
+  "presets": [{"title": "좁게", "value": 680}, {"title": "기본", "value": 920}, {"title": "넓게", "value": 1200}],
+  "toolbar": ["open", "reload", "find", "source", "width", "theme"],
+  "labels": {
+    "open": "열기…", "reload": "↻", "find": "검색", "source": "소스 보기", "reading": "문서 보기", "width": "본문 폭 ▾",
+    "theme": "테마", "system": "시스템", "light": "라이트", "dark": "다크", "readOnly": "읽기 전용",
+    "readingWidth": "문서 화면 폭", "sourceWidth": "소스 화면 폭", "fullWidth": "창 너비에 맞춤", "fit": "창에 맞춤",
+    "resetWidth": "기본 폭으로", "widthHint": "문서 화면과 소스 화면의 폭을 각각 기억합니다."
+  }
+}
