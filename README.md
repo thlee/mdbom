@@ -115,7 +115,7 @@ Mermaid, LaTeX/KaTeX, SVG 및 편집 기능은 지원하지 않습니다. 100,00
 
 ## 기여자
 
-- **[thlee](https://github.com/thlee)** — 기획, 기능·디자인 결정, 사용성 확인 및 프로젝트 관리
+- **[Tae-Ho Lee](https://github.com/thlee)** — 기획, 기능·디자인 결정, 사용성 확인 및 프로젝트 관리
 - **ChatGPT · OpenAI Codex (AI 개발 도우미)** — 설계 논의, 코드 구현·수정, 테스트·패키징·문서 작성 지원
 
 엠디봄은 개발자와 AI 도우미가 대화하며 함께 만든 개인 오픈소스 프로젝트입니다.
