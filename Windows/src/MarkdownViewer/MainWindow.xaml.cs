@@ -193,6 +193,9 @@ public partial class MainWindow : Window
                     if (root.GetProperty("action").GetString() == "command") ExecuteCommand(root.GetProperty("command").GetString());
                     else ChangeWorkspace(root.GetProperty("key").GetString(), root.GetProperty("value").GetString());
                     break;
+                case "printReady":
+                    if (_printRequested) { _printRequested = false; Browser.CoreWebView2.ShowPrintUI(CoreWebView2PrintDialogKind.Browser); }
+                    break;
                 case "ready": _ready.TrySetResult(); break;
                 case "open": OpenDialog(); break;
                 case "drop":
@@ -248,6 +251,8 @@ public partial class MainWindow : Window
         if (_ready.Task.IsCompletedSuccessfully) Post(new { type = "notice", message });
     }
 
+    private bool _printRequested;
+
     private void ExecuteCommand(string? command)
     {
         switch (command)
@@ -260,7 +265,7 @@ public partial class MainWindow : Window
             case "find": Post(new { type = "find" }); break;
             case "print":
                 if (_currentPath is not null && Browser.CoreWebView2 is not null)
-                    Browser.CoreWebView2.ShowPrintUI(CoreWebView2PrintDialogKind.Browser);
+                { _printRequested = true; Post(new {type="preparePrint"}); }
                 break;
             case "source": ToggleSourceView(); break;
             case "theme": CycleTheme(); break;

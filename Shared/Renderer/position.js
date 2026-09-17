@@ -7,7 +7,7 @@ export function markSourceTokens(tokens) {
   const entries = new Map();
   for (const token of tokens) {
     if (!token.map || token.hidden || !['paragraph_open', 'heading_open', 'list_item_open',
-      'tr_open', 'fence', 'code_block', 'hr', 'html_block', 'front_matter'].includes(token.type)) continue;
+      'tr_open', 'fence', 'code_block', 'hr', 'html_block', 'front_matter', 'math_block'].includes(token.type)) continue;
     const id = `${prefix}-${entries.size}`;
     entries.set(id, { firstLine: token.map[0], endLine: token.map[1], fence: token.type === 'fence', frontMatter: token.type === 'front_matter' });
     token.attrSet(marker, id);

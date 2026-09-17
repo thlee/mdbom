@@ -68,7 +68,7 @@ window.runWorkspaceChecks = async function(workspace) {
   const beforeHelp=source.textContent;
   tools.querySelector('[aria-controls=workspace-help]').click();
   const help=document.getElementById('workspace-help');
-  checks.bundledMarkdownHelp = help.open && help.querySelector('h1').textContent==='엠디봄 사용설명서' && help.textContent.includes('1.0.0-beta.3') && help.querySelector('table')!==null;
+  checks.bundledMarkdownHelp = help.open && help.querySelector('h1').textContent==='엠디봄 사용설명서' && help.textContent.includes('1.0.0-beta.4') && help.querySelector('table')!==null;
   checks.helpPreservesDocument = source.textContent===beforeHelp && widthPanel.hidden && fontPanel.hidden;
   help.querySelector('button').click();checks.helpCloses = !help.open;
   // Search navigation must align the actual matched word, not the viewport top.

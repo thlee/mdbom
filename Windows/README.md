@@ -1,6 +1,6 @@
-# 엠디봄 · MDBom — Windows 1.0 베타 3
+# 엠디봄 · MDBom — Windows 1.0 베타 4
 
-[베타 설치 파일](https://github.com/thlee/mdbom/releases/tag/v1.0.0-beta.3) · [사용설명서](../HELP.md)
+[베타 설치 파일](https://github.com/thlee/mdbom/releases/tag/v1.0.0-beta.4) · [사용설명서](../HELP.md)
 
 마크다운 문서를 가볍게 보다.
 
@@ -118,7 +118,7 @@ markdown-it, DOMPurify, highlight.js, 공통 CSS는 실행 파일에 포함됩�
 
 외부 이미지는 로드하지 않습니다. 사용자가 직접 누른 HTTP/HTTPS/메일 링크는 기본 브라우저 또는 메일 앱에서 열립니다. WebView2 Runtime의 시스템 업데이트는 앱의 문서 렌더링과 별개로 Microsoft가 관리합니다.
 
-문서당 16 MiB, 로컬 이미지당 20 MiB 제한이 있습니다. 큰 코드 블록(100,000자 이상)은 강조를 생략합니다. 검색은 최대 5,000개 결과를 표시합니다. UNC/네트워크 드라이브, 심볼릭 링크/정션, 문서 폴더 밖의 이미지와 상대 링크, SVG는 지원하지 않습니다. Mermaid와 수학 수식 렌더링은 이 버전의 범위에 포함하지 않았습니다. HTML/CSS 전체를 그대로 실행하는 브라우저는 아닙니다.
+문서당 16 MiB, 로컬 이미지당 20 MiB 제한이 있습니다. 큰 코드 블록(100,000자 이상)은 강조를 생략합니다. 검색은 최대 5,000개 결과를 표시합니다. UNC/네트워크 드라이브, 심볼릭 링크/정션, 문서 폴더 밖의 이미지와 상대 링크는 지원하지 않습니다. 로컬 SVG 이미지, Mermaid 다이어그램, KaTeX 수식을 지원합니다. 본문의 SVG 태그와 Mermaid 설정·클릭·외부 리소스는 허용하지 않습니다. 자세한 문법과 제한은 [도움말](../HELP.md)을 참고하세요. HTML/CSS 전체를 그대로 실행하는 브라우저는 아닙니다.
 
 완전히 오프라인인 PC에 처음 설치하려면 WebView2 **Standalone Installer**도 별도로 준비하세요. ZIP 배포로 실행할 때는 Microsoft의 **Fixed Version Runtime x64** 배포 파일을 해제해 `MarkdownViewer.exe` 옆 `WebView2Runtime` 폴더에 `msedgewebview2.exe`가 직접 들어가도록 배치할 수 있습니다. 설치 EXE는 Evergreen Runtime 등록을 검사하므로 Fixed Version만 준비한 환경에서는 ZIP 배포를 사용하세요. Fixed Version Runtime의 업데이트와 배포 조건은 배포자가 관리해야 합니다. [Microsoft 배포 문서](https://learn.microsoft.com/en-us/microsoft-edge/webview2/concepts/distribution)를 참고하세요.
 

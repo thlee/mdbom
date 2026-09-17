@@ -1,5 +1,6 @@
 entities 8.1.0
 
+LICENSE
 Copyright (c) Felix Böhm
 All rights reserved.
 

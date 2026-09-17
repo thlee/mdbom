@@ -37,7 +37,7 @@ final class LocalSchemeHandler: NSObject, WKURLSchemeHandler {
             } else if url.host == "document", let root = documentDirectory {
                 resource = try DocumentLoader.containedURL(path: path, in: root)
                 let types = ["png": "image/png", "jpg": "image/jpeg", "jpeg": "image/jpeg",
-                             "gif": "image/gif", "webp": "image/webp", "avif": "image/avif"]
+                             "gif": "image/gif", "webp": "image/webp", "avif": "image/avif", "svg": "image/svg+xml"]
                 guard let type = types[resource.pathExtension.lowercased()] else {
                     throw URLError(.noPermissionsToReadFile)
                 }
@@ -197,7 +197,7 @@ final class WebCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageHandl
                         webView.window?.appearance = appearance
                     }
                     _ = try await webView.callAsyncJavaScript(
-                        "viewer.configure(options); if (shouldRender) viewer.render(markdown, filename, preserveScroll); if (restoreScroll) { await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))); window.scrollTo(scrollX, scrollY); }",
+                        "viewer.configure(options); if (shouldRender) await viewer.render(markdown, filename, preserveScroll); if (restoreScroll) { await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))); window.scrollTo(scrollX, scrollY); }",
                         arguments: scriptArguments, in: nil, contentWorld: .page)
                     self.lastRevision = revision
                     self.appliedPresentation = presentation

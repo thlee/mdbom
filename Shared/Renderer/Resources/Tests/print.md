@@ -2,6 +2,19 @@
 
 한글 문서 인쇄 · Rendered output only.
 
+수식 $E=mc^2$.
+
+$$
+\frac{1}{n}\sum_{i=1}^{n} x_i
+$$
+
+```mermaid
+flowchart LR
+ A[Print] --> B[Diagram]
+```
+
+![SVG](rich.svg)
+
 - [x] Completed task
 - [ ] Pending task
 

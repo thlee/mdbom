@@ -67,12 +67,12 @@ public partial class MainWindow
 
                 ![local](pixel.png)
                 ![remote](https://example.com/should-never-load.png)
-                <img src=x onerror="window.injected=true">
-                <script>window.injected=true</script>
+                <img src=x onerror="window.__mdbomScriptAttack=true">
+                <script>window.__mdbomScriptAttack=true</script>
                 <iframe src="https://example.com"></iframe>
-                <svg onload="window.injected=true"></svg>
+                <svg onload="window.__mdbomScriptAttack=true"></svg>
                 <form><input type=text value=edit></form>
-                <a href="javascript:window.injected=true">bad link</a>
+                <a href="javascript:window.__mdbomScriptAttack=true">bad link</a>
                 <div id="content" name="chrome" style="position:fixed">Safe text</div>
                 """;
             await File.WriteAllTextAsync(fixture, markdown, new UTF8Encoding(false));
@@ -85,7 +85,7 @@ public partial class MainWindow
             Check("Task lists are disabled", await Js("document.querySelectorAll('#content input:disabled').length === 2 && document.querySelectorAll('#content input:checked').length === 1"));
             Check("Fenced code is highlighted", await Js("document.querySelectorAll('#content .hljs-keyword').length > 0"));
             Check("Unknown code language remains literal", await Js("document.querySelector('#content .language-unknown-language').textContent.includes('<script>literal code</script>')"));
-            Check("Sanitizer removes executable markup", await Js("!window.injected && !document.querySelector('#content script, #content iframe, #content svg, #content form, #content [onerror], #content [style], #content input:not([type=checkbox])')"));
+            Check("Sanitizer removes executable markup", await Js("!window.__mdbomScriptAttack && !document.querySelector('#content script, #content iframe, #content svg, #content form, #content [onerror], #content [style], #content input:not([type=checkbox])')"));
             Check("Sanitizer prevents DOM clobbering", await Js("document.querySelectorAll('#content').length === 1 && !document.querySelector('#content [name]')"));
             Check("Unsafe links removed", await Js("![...document.querySelectorAll('#content a')].some(a=>a.href.startsWith('javascript:'))"));
             Check("External images suppressed", await Js("!document.querySelector('#content img[src^=\"https://example.com\"]') && document.querySelector('.image-placeholder') !== null"));
@@ -124,7 +124,7 @@ public partial class MainWindow
             await WaitUntil("document.documentElement.dataset.view === 'source'");
             Check("Toolbar switches to source view", await Js("document.getElementById('content').hidden && !document.getElementById('sourcecontent').hidden"));
             Check("Source preserves the exact decoded Markdown", JsonSerializer.Deserialize<string>(await Browser.ExecuteScriptAsync("document.getElementById('sourcecontent').textContent")) == markdown);
-            Check("Source HTML remains inert text", await Js("document.getElementById('sourcecontent').children.length === 0 && !window.injected && !document.getElementById('sourcecontent').isContentEditable"));
+            Check("Source HTML remains inert text", await Js("document.getElementById('sourcecontent').children.length === 0 && !window.__mdbomScriptAttack && !document.getElementById('sourcecontent').isContentEditable"));
             await Browser.ExecuteScriptAsync("var selectionRange=document.createRange(); selectionRange.selectNodeContents(document.getElementById('sourcecontent')); window.getSelection().removeAllRanges(); window.getSelection().addRange(selectionRange)");
             Check("Source text can be selected for copying", JsonSerializer.Deserialize<string>(await Browser.ExecuteScriptAsync("window.getSelection().toString()")) == markdown);
             ExecuteCommand("find");
@@ -349,6 +349,33 @@ public partial class MainWindow
             await File.WriteAllTextAsync(watched,"# Inactive file");
             await Task.Delay(1200);
             Check("Previous file no longer refreshes", _currentPath == fixture && _currentText != "# Inactive file");
+            await File.WriteAllTextAsync(Path.Combine(fixtureDir,"rich.svg"), """
+                <svg xmlns="http://www.w3.org/2000/svg" width="240" height="80" onload="window.__mdbomRichAttack=true"><rect width="240" height="80" rx="12" fill="#dcefdc"/><text x="24" y="48" fill="#235633" font-size="22">Local SVG</text><script>window.__mdbomRichAttack=true</script></svg>
+                """);
+            using var richScript = new StreamReader(typeof(MainWindow).Assembly.GetManifestResourceStream("Tests/rich-content.js")!);
+            await Browser.ExecuteScriptAsync(await richScript.ReadToEndAsync());
+            await Browser.ExecuteScriptAsync("window.richResult=null; window.richRequest=null; runRichChecks(document.getElementById('content'), text => new Promise(resolve=>{window.richDone=resolve;window.richRequest=text;})).then(result=>window.richResult=result).catch(error=>window.richResult={error:String(error)});");
+            for(var i=0;i<100 && !await Js("window.richResult !== null");i++) {
+                using var request = JsonDocument.Parse(await Browser.ExecuteScriptAsync("window.richRequest"));
+                if(request.RootElement.ValueKind == JsonValueKind.String) {
+                    var before = await Browser.ExecuteScriptAsync("document.documentElement.dataset.renderCount");
+                    Post(new {type="render",markdown=request.RootElement.GetString(),name="rich.md",baseUrl=_server!.DocumentBaseUrl,view="reading"});
+                    await WaitUntil($"document.documentElement.dataset.renderCount !== {before}");
+                    await Browser.ExecuteScriptAsync("window.richRequest=null; window.richDone()");
+                }
+                await Task.Delay(100);
+            }
+            await WaitUntil("window.richResult !== null");
+            using var richReport = JsonDocument.Parse(await Browser.ExecuteScriptAsync("window.richResult"));
+            foreach(var check in richReport.RootElement.EnumerateObject()) Check("Rich content: " + check.Name, check.Value.ValueKind == JsonValueKind.True);
+            Post(new {type="theme",theme="light"});
+            ChangeWorkspace("view","reading");
+            await Task.Delay(150);
+            await CaptureWindowAsync(Path.Combine(directory,"rich-light.png"));
+            Post(new {type="theme",theme="dark"});
+            ChangeWorkspace("view","horizontal");
+            await Task.Delay(150);
+            await CaptureWindowAsync(Path.Combine(directory,"rich-dark-split.png"));
             using var printFixture = new StreamReader(typeof(MainWindow).Assembly.GetManifestResourceStream("Tests/print.md")!);
             var printPath = Path.Combine(fixtureDir,"Print.md");
             await File.WriteAllTextAsync(printPath,await printFixture.ReadToEndAsync());

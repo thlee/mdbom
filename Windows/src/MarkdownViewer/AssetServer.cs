@@ -71,6 +71,6 @@ internal sealed class AssetServer
     {
         ".html" => "text/html; charset=utf-8", ".js" => "text/javascript; charset=utf-8", ".css" => "text/css; charset=utf-8",
         ".png" => "image/png", ".jpg" or ".jpeg" => "image/jpeg", ".gif" => "image/gif", ".webp" => "image/webp",
-        ".bmp" => "image/bmp", ".ico" => "image/x-icon", _ => "application/octet-stream"
+        ".svg" => "image/svg+xml", ".bmp" => "image/bmp", ".ico" => "image/x-icon", _ => "application/octet-stream"
     };
 }
