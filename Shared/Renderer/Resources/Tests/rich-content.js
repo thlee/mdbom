@@ -52,6 +52,7 @@ $\href{javascript:alert(1)}{bad}$
 
 <svg onload="window.__mdbomRichAttack=true"><script>window.__mdbomRichAttack=true</script></svg>` .replaceAll('\\`','`'));
   checks.invalidMathFallback=!!fragment.querySelector('.math-error')&&fragment.textContent.includes('unknowncommand');
+  checks.doubleDollarInlineLiteral=!core.render('text $$x$$ text').querySelector('.math-inline');
   checks.currencyLiteral=fragment.textContent.includes('$5 and $10');
   checks.mathNoActiveContent=!fragment.querySelector('a,script,svg,[href],[onload]');
   checks.mathDelimitersEscaped=fragment.textContent.includes('$x$')&&!core.render(String.raw`Literal \$x\$ and $5 and $10.`).querySelector('.math-inline');

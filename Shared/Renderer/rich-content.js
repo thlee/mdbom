@@ -7,14 +7,14 @@ const DOMPurify = createDOMPurify(window);
 export function installMath(md) {
   md.inline.ruler.before('escape','math_inline',(state,silent)=>{
     const start=state.pos;
-    if(state.src[start]!=='$' || state.src[start+1]==='$' || /\s/.test(state.src[start+1]||' ')) return false;
+    if(state.src[start]!=='$' || state.src[start+1]==='$' || state.src[start-1]==='$' || /\s/.test(state.src[start+1]||' ')) return false;
     let end=start+1;
     while((end=state.src.indexOf('$',end))!==-1) {
       let slashes=0;for(let i=end-1;i>start&&state.src[i]==='\\';i--)slashes++;
       if(slashes%2){end++;continue;}
       break;
     }
-    if(end<0 || end-start>4096 || /\s/.test(state.src[end-1]) || /\d/.test(state.src[end+1]||'') || /[\n`]/.test(state.src.slice(start,end)))return false;
+    if(end<0 || state.src[end+1]==='$' || end-start>4096 || /\s/.test(state.src[end-1]) || /\d/.test(state.src[end+1]||'') || /[\n`]/.test(state.src.slice(start,end)))return false;
     if(!silent){const token=state.push('math_inline','span',0);token.content=state.src.slice(start+1,end);}
     state.pos=end+1;return true;
   });
