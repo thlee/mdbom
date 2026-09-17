@@ -168,7 +168,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
     }
 
     @objc private func showAbout() {
-        NSApplication.shared.orderFrontStandardAboutPanel(options: [.applicationVersion: Bundle.main.object(forInfoDictionaryKey: "MDBomDisplayVersion") as? String ?? "1.0.0-beta.3"])
+        NSApplication.shared.orderFrontStandardAboutPanel(options: [.applicationVersion: Bundle.main.object(forInfoDictionaryKey: "MDBomDisplayVersion") as? String ?? "1.0.0-beta.4"])
     }
     private func buildMenu() {
         let bar = NSMenu()

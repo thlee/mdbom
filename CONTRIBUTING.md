@@ -49,7 +49,7 @@ UI를 바꿀 때는 `ARCHITECTURE.md`의 공통 화면 구성에 따라 두 운�
 
 ## 배포
 
-기능 버전을 올릴 때는 `macOS/Packaging/Info.plist`와 `Windows/src/MarkdownViewer/MarkdownViewer.csproj`를 함께 확인하고 변경 이력 및 사용자 문서를 갱신합니다. 현재 표시 버전은 `1.0.0-beta.3`입니다. Mac의 `MDBomDisplayVersion`과 Windows의 `Version`을 맞춥니다. OS용 숫자 버전(Mac `CFBundleShortVersionString`, Windows `FileVersion`)은 별도로 관리하고 빌드 번호는 증가시킵니다. 도움말의 버전 표기도 함께 갱신합니다. 버전 번호를 변경하지 않은 패키징·문서 작업은 Unreleased로 기록합니다.
+기능 버전을 올릴 때는 `macOS/Packaging/Info.plist`와 `Windows/src/MarkdownViewer/MarkdownViewer.csproj`를 함께 확인하고 변경 이력 및 사용자 문서를 갱신합니다. 현재 표시 버전은 `1.0.0-beta.4`입니다. Mac의 `MDBomDisplayVersion`과 Windows의 `Version`을 맞춥니다. OS용 숫자 버전(Mac `CFBundleShortVersionString`, Windows `FileVersion`)은 별도로 관리하고 빌드 번호는 증가시킵니다. 도움말의 버전 표기도 함께 갱신합니다. 버전 번호를 변경하지 않은 패키징·문서 작업은 Unreleased로 기록합니다.
 
 저장소 루트에서 Mac은 `./Scripts/package-dmg.sh`, Windows는 `Publish.ps1` 후 `Build-Installer.ps1`을 실행합니다. 정확한 명령과 선행 도구는 각 플랫폼 README에 있습니다. Windows 설치 검사는 기존 앱·설정이 없는 일회용 계정에서만 `Test-Installer.ps1`로 실행합니다.
 

@@ -1,6 +1,9 @@
 import MarkdownIt from 'markdown-it';
-import DOMPurify from 'dompurify';
+import createDOMPurify from 'dompurify';
+const DOMPurify = createDOMPurify(window);
 import hljs from 'highlight.js/lib/common';
+import {installMath, typesetMath} from './rich-content.js';
+export {enhanceDiagrams} from './rich-content.js';
 import { markSourceTokens, attachSourcePositions } from './position.js';
 export { createPositionSync } from './position.js';
 export { createSearch } from './search.js';
@@ -12,12 +15,14 @@ const md = new MarkdownIt({
   typographer: false,
   highlight(code, language) {
     // Bound syntax highlighting work for very large code blocks; plain text stays readable.
-    if (code.length < 100000 && language && hljs.getLanguage(language)) {
+    if (language !== 'mermaid' && code.length < 100000 && language && hljs.getLanguage(language)) {
       try { return hljs.highlight(code, { language, ignoreIllegals: true }).value; } catch { /* escaped fallback */ }
     }
     return '';
   }
 });
+
+installMath(md);
 
 // Recognize a closed YAML metadata header only at the start of the document.
 // Keep parser line numbers intact for reading/source alignment; never execute YAML.
@@ -94,7 +99,7 @@ const sanitizeOptions = {
     'tfoot', 'tr', 'th', 'td', 'img', 'input', 'span', 'div', 'details', 'summary', 'kbd',
     'sup', 'sub', 'dl', 'dt', 'dd', 'abbr', 'b', 'i'],
   ALLOWED_ATTR: ['href', 'src', 'alt', 'title', 'class', 'type', 'checked', 'disabled',
-    'start', 'colspan', 'rowspan', 'align', 'open', 'aria-label', 'data-mv-position'],
+    'start', 'colspan', 'rowspan', 'align', 'open', 'aria-label', 'data-mv-position', 'data-mv-math'],
   ALLOW_DATA_ATTR: false,
   ALLOW_ARIA_ATTR: false,
   ALLOW_UNKNOWN_PROTOCOLS: false,
@@ -180,13 +185,14 @@ export const apiVersion = 1;
 export function render(markdown, options = {}) {
   const settings = {
     baseURL: 'mdviewer://document/', headingPrefix: 'heading-',
-    imageExtensions: ['png', 'jpg', 'jpeg', 'gif', 'webp', 'avif'],
+    imageExtensions: ['png', 'jpg', 'jpeg', 'gif', 'webp', 'avif', 'svg'],
     localMarkdownLinks: true, ...options
   };
   const env = {}, tokens = md.parse(markdown, env);
   const positions = markSourceTokens(tokens);
   const fragment = prepare(DOMPurify.sanitize(md.renderer.render(tokens, md.options, env), sanitizeOptions), settings);
   attachSourcePositions(fragment, positions);
+  typesetMath(fragment, env.math);
   return fragment;
 }
 

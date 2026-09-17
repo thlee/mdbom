@@ -1,6 +1,6 @@
-# 엠디봄 · MDBom — macOS 1.0 베타 3
+# 엠디봄 · MDBom — macOS 1.0 베타 4
 
-[베타 설치 파일](https://github.com/thlee/mdbom/releases/tag/v1.0.0-beta.3) · [사용설명서](../HELP.md)
+[베타 설치 파일](https://github.com/thlee/mdbom/releases/tag/v1.0.0-beta.4) · [사용설명서](../HELP.md)
 
 SwiftUI / AppKit + WKWebView로 만든 Apple Silicon용 읽기 전용 Markdown 앱입니다. Windows와 같은 렌더러·도구 패널을 사용합니다. [공통 사용법](../README.md), [개발 절차](../CONTRIBUTING.md), [검증 기록](../VERIFICATION.md)을 참고하세요.
 

@@ -155,3 +155,13 @@ kbd { background:var(--surface); border:1px solid var(--border); border-bottom-w
 #workspace-help > button { position:sticky; top:0; display:block; margin-left:auto; z-index:1; }
 #workspace-help .markdown-body { font-size:16px; }
 @media print { #workspace-help { display:none!important; } }
+
+.math-block { overflow-x:auto; margin:1.2em 0; padding:8px 0; text-align:center; }
+.math-inline math { font-size:1.1em; }
+.math-error,.diagram-error { color:var(--muted); font-family:ui-monospace,monospace; }
+.mermaid-diagram { white-space:normal!important; padding:16px!important; }
+.mermaid-diagram > img { display:block; max-width:100%; height:auto; margin:auto; background:#fff; border-radius:6px; }
+.mermaid-diagram details { margin-top:12px; font:12px/1.5 -apple-system, sans-serif; }
+.mermaid-diagram summary { cursor:pointer; color:var(--muted); }
+.diagram-error { white-space:normal; padding:8px 0; font-size:12px; }
+@media print { .mermaid-diagram { break-inside:avoid; } .mermaid-diagram details { display:none!important; } .math-block { overflow:visible; } }

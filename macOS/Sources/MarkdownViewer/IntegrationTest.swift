@@ -22,6 +22,7 @@ final class IntegrationTest {
             try FileManager.default.createDirectory(at: fixtureDirectory, withIntermediateDirectories: true)
             let png = Data(base64Encoded: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+a2ioAAAAASUVORK5CYII=")!
             try png.write(to: fixtureDirectory.appendingPathComponent("local image.png"))
+            try Self.svgFixture.write(to: fixtureDirectory.appendingPathComponent("rich.svg"), atomically: true, encoding: .utf8)
             let settings = ViewerSettings(defaults: UserDefaults(suiteName: settingsSuite)!)
             settings.theme = "light"
             let model = ViewerModel(settings: settings)
@@ -167,7 +168,7 @@ final class IntegrationTest {
             _ = try await web.evaluateJavaScript(String(contentsOf: RendererAssets.scrollChecks, encoding: .utf8) + "\ntrue;")
             let scrollReport = try await web.callAsyncJavaScript("""
                 viewer.configure({theme:'dark', reading:660, source:1280, view:'reading'});
-                viewer.render(scrollChecks.fixture, 'scroll-position.md');
+                await viewer.render(scrollChecks.fixture, 'scroll-position.md');
                 return await scrollChecks.run(async () => {
                   viewer.configure({theme:'dark', reading:660, source:1280,
                     view:document.documentElement.dataset.view === 'source' ? 'reading' : 'source'});
@@ -200,7 +201,7 @@ final class IntegrationTest {
             let refreshChecks = try await web.callAsyncJavaScript("""
                 return await runRefreshChecks(viewer.workspace, async (text, preserve) => {
                   viewer.configure({layout:viewer.workspace.layout, sync:false});
-                  viewer.render(text, 'refresh.md', preserve);
+                  await viewer.render(text, 'refresh.md', preserve);
                 });
                 """, arguments: [:], in: nil, contentWorld: .page) as? [String: Bool] ?? ["report": false]
             for (key,value) in refreshChecks { checks["refresh_" + key] = value }
@@ -242,11 +243,20 @@ final class IntegrationTest {
             try "# After close".write(to: watched, atomically: true, encoding: .utf8)
             try await Task.sleep(nanoseconds: 1_200_000_000)
             checks["auto_stopsOnClose"] = live.revision == unchanged
+            _ = try await web.evaluateJavaScript(String(contentsOf: RendererAssets.scrollChecks.deletingLastPathComponent().appendingPathComponent("rich-content.js"), encoding: .utf8) + "\ntrue;")
+            let richChecks = try await web.callAsyncJavaScript("""
+                viewer.configure({view:'reading',layout:'single',theme:'light'});
+                return await runRichChecks(document.getElementById('content'), text => viewer.render(text,'rich.md'));
+                """, arguments: [:], in: nil, contentWorld: .page) as? [String: Bool] ?? ["report": false]
+            for (key,value) in richChecks { checks["rich_" + key] = value }
+            try await snapshot("rich-light.png")
+            _ = try await web.evaluateJavaScript("viewer.configure({theme:'dark',layout:'horizontal'}); true")
+            try await snapshot("rich-dark-split.png")
             let printable = try String(contentsOf: RendererAssets.scrollChecks.deletingLastPathComponent().appendingPathComponent("print.md"), encoding: .utf8)
             for mode in ["reading", "source", "horizontal", "vertical"] {
                 _ = try await web.callAsyncJavaScript("""
                     viewer.configure({view:mode==='source'?'source':'reading',layout:['reading','source'].includes(mode)?'single':mode,theme:'dark'});
-                    viewer.render(text, 'Print.md'); return true;
+                    await viewer.render(text, 'Print.md'); return true;
                     """, arguments: ["mode":mode,"text":printable], in: nil, contentWorld: .page)
                 let output = reportURL.deletingLastPathComponent().appendingPathComponent("print-" + mode + ".pdf")
                 let info = NSPrintInfo.shared.copy() as! NSPrintInfo
@@ -268,6 +278,8 @@ final class IntegrationTest {
                    success: checks.values.allSatisfy { $0 })
         } catch { finish(["error": error.localizedDescription], success: false) }
     }
+
+    private static let svgFixture = ##"<svg xmlns="http://www.w3.org/2000/svg" width="240" height="80" onload="window.__mdbomRichAttack=true"><rect width="240" height="80" rx="12" fill="#dcefdc"/><text x="24" y="48" fill="#235633" font-size="22">Local SVG</text><script>window.__mdbomRichAttack=true</script></svg>"##
 
     private func applyWidth(_ width: ReadingWidth) async throws {
         coordinator.model.readingWidth = width
@@ -364,7 +376,7 @@ final class IntegrationTest {
     ![Local asset](local%20image.png)
     ![Remote](https://example.com/tracker.png)
     ![Absolute](/etc/private.png)
-    ![Active vector](untrusted.svg)
+    ![Unsupported image](untrusted.pdf)
 
     <details><summary>Details</summary><p>Safe HTML stays readable.</p></details>
     <script>window.compromised = true</script>

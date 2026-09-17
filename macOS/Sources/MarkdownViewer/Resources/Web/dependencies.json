@@ -2,9 +2,264 @@
   "generatedBy": "npm run bundle",
   "packages": [
     {
-      "name": "markdown-it",
-      "version": "15.0.2",
+      "name": "@braintree/sanitize-url",
+      "version": "7.1.2",
       "license": "MIT"
+    },
+    {
+      "name": "@chevrotain/cst-dts-gen",
+      "version": "11.1.2",
+      "license": "Apache-2.0"
+    },
+    {
+      "name": "@chevrotain/gast",
+      "version": "11.1.2",
+      "license": "Apache-2.0"
+    },
+    {
+      "name": "@chevrotain/regexp-to-ast",
+      "version": "11.1.2",
+      "license": "Apache-2.0"
+    },
+    {
+      "name": "@chevrotain/utils",
+      "version": "11.1.2",
+      "license": "Apache-2.0"
+    },
+    {
+      "name": "@iconify/utils",
+      "version": "3.1.7",
+      "license": "MIT"
+    },
+    {
+      "name": "@mermaid-js/parser",
+      "version": "2.0.0",
+      "license": "MIT"
+    },
+    {
+      "name": "@upsetjs/venn.js",
+      "version": "2.0.0",
+      "license": "MIT"
+    },
+    {
+      "name": "chevrotain",
+      "version": "11.1.2",
+      "license": "Apache-2.0"
+    },
+    {
+      "name": "cose-base",
+      "version": "1.0.3",
+      "license": "MIT"
+    },
+    {
+      "name": "cose-base",
+      "version": "2.2.0",
+      "license": "MIT"
+    },
+    {
+      "name": "cytoscape",
+      "version": "3.34.3",
+      "license": "MIT"
+    },
+    {
+      "name": "cytoscape-cose-bilkent",
+      "version": "4.1.0",
+      "license": "MIT"
+    },
+    {
+      "name": "cytoscape-fcose",
+      "version": "2.2.0",
+      "license": "MIT"
+    },
+    {
+      "name": "d3",
+      "version": "7.9.0",
+      "license": "ISC"
+    },
+    {
+      "name": "d3-array",
+      "version": "3.2.4",
+      "license": "ISC"
+    },
+    {
+      "name": "d3-array",
+      "version": "2.12.1",
+      "license": "BSD-3-Clause"
+    },
+    {
+      "name": "d3-axis",
+      "version": "3.0.0",
+      "license": "ISC"
+    },
+    {
+      "name": "d3-brush",
+      "version": "3.0.0",
+      "license": "ISC"
+    },
+    {
+      "name": "d3-chord",
+      "version": "3.0.1",
+      "license": "ISC"
+    },
+    {
+      "name": "d3-color",
+      "version": "3.1.0",
+      "license": "ISC"
+    },
+    {
+      "name": "d3-contour",
+      "version": "4.0.2",
+      "license": "ISC"
+    },
+    {
+      "name": "d3-delaunay",
+      "version": "6.0.4",
+      "license": "ISC"
+    },
+    {
+      "name": "d3-dispatch",
+      "version": "3.0.1",
+      "license": "ISC"
+    },
+    {
+      "name": "d3-drag",
+      "version": "3.0.0",
+      "license": "ISC"
+    },
+    {
+      "name": "d3-dsv",
+      "version": "3.0.1",
+      "license": "ISC"
+    },
+    {
+      "name": "d3-ease",
+      "version": "3.0.1",
+      "license": "BSD-3-Clause"
+    },
+    {
+      "name": "d3-fetch",
+      "version": "3.0.1",
+      "license": "ISC"
+    },
+    {
+      "name": "d3-force",
+      "version": "3.0.0",
+      "license": "ISC"
+    },
+    {
+      "name": "d3-format",
+      "version": "3.1.2",
+      "license": "ISC"
+    },
+    {
+      "name": "d3-geo",
+      "version": "3.1.1",
+      "license": "ISC"
+    },
+    {
+      "name": "d3-hierarchy",
+      "version": "3.1.2",
+      "license": "ISC"
+    },
+    {
+      "name": "d3-interpolate",
+      "version": "3.0.1",
+      "license": "ISC"
+    },
+    {
+      "name": "d3-path",
+      "version": "3.1.0",
+      "license": "ISC"
+    },
+    {
+      "name": "d3-path",
+      "version": "1.0.9",
+      "license": "BSD-3-Clause"
+    },
+    {
+      "name": "d3-polygon",
+      "version": "3.0.1",
+      "license": "ISC"
+    },
+    {
+      "name": "d3-quadtree",
+      "version": "3.0.1",
+      "license": "ISC"
+    },
+    {
+      "name": "d3-random",
+      "version": "3.0.1",
+      "license": "ISC"
+    },
+    {
+      "name": "d3-sankey",
+      "version": "0.12.3",
+      "license": "BSD-3-Clause"
+    },
+    {
+      "name": "d3-scale",
+      "version": "4.0.2",
+      "license": "ISC"
+    },
+    {
+      "name": "d3-scale-chromatic",
+      "version": "3.1.0",
+      "license": "ISC"
+    },
+    {
+      "name": "d3-selection",
+      "version": "3.0.0",
+      "license": "ISC"
+    },
+    {
+      "name": "d3-shape",
+      "version": "3.2.0",
+      "license": "ISC"
+    },
+    {
+      "name": "d3-shape",
+      "version": "1.3.7",
+      "license": "BSD-3-Clause"
+    },
+    {
+      "name": "d3-time",
+      "version": "3.1.0",
+      "license": "ISC"
+    },
+    {
+      "name": "d3-time-format",
+      "version": "4.1.0",
+      "license": "ISC"
+    },
+    {
+      "name": "d3-timer",
+      "version": "3.0.1",
+      "license": "ISC"
+    },
+    {
+      "name": "d3-transition",
+      "version": "3.0.1",
+      "license": "ISC"
+    },
+    {
+      "name": "d3-zoom",
+      "version": "3.0.0",
+      "license": "ISC"
+    },
+    {
+      "name": "dagre-d3-es",
+      "version": "7.0.14",
+      "license": "MIT"
+    },
+    {
+      "name": "dayjs",
+      "version": "1.11.23",
+      "license": "MIT"
+    },
+    {
+      "name": "delaunator",
+      "version": "5.1.0",
+      "license": "ISC"
     },
     {
       "name": "dompurify",
@@ -12,14 +267,9 @@
       "license": "(MPL-2.0 OR Apache-2.0)"
     },
     {
-      "name": "highlight.js",
-      "version": "11.12.0",
-      "license": "BSD-3-Clause"
-    },
-    {
-      "name": "argparse",
-      "version": "3.0.2",
-      "license": "PSF-2.0"
+      "name": "elkjs",
+      "version": "0.9.3",
+      "license": "EPL-2.0"
     },
     {
       "name": "entities",
@@ -27,8 +277,67 @@
       "license": "BSD-2-Clause"
     },
     {
+      "name": "es-toolkit",
+      "version": "1.52.0",
+      "license": "MIT"
+    },
+    {
+      "name": "highlight.js",
+      "version": "11.12.0",
+      "license": "BSD-3-Clause"
+    },
+    {
+      "name": "internmap",
+      "version": "2.0.3",
+      "license": "ISC"
+    },
+    {
+      "name": "internmap",
+      "version": "1.0.1",
+      "license": "ISC"
+    },
+    {
+      "name": "katex",
+      "version": "0.18.7",
+      "license": "MIT"
+    },
+    {
+      "name": "katex",
+      "version": "0.16.47",
+      "license": "MIT"
+    },
+    {
+      "name": "khroma",
+      "version": "2.1.0"
+    },
+    {
+      "name": "layout-base",
+      "version": "1.0.2",
+      "license": "MIT"
+    },
+    {
+      "name": "layout-base",
+      "version": "2.0.1",
+      "license": "MIT"
+    },
+    {
       "name": "linkify-it",
       "version": "6.1.0",
+      "license": "MIT"
+    },
+    {
+      "name": "lodash-es",
+      "version": "4.18.1",
+      "license": "MIT"
+    },
+    {
+      "name": "markdown-it",
+      "version": "15.0.2",
+      "license": "MIT"
+    },
+    {
+      "name": "marked",
+      "version": "16.4.2",
       "license": "MIT"
     },
     {
@@ -37,19 +346,49 @@
       "license": "MIT"
     },
     {
+      "name": "mermaid",
+      "version": "12.0.0",
+      "license": "MIT"
+    },
+    {
       "name": "punycode.js",
       "version": "2.3.1",
+      "license": "MIT"
+    },
+    {
+      "name": "robust-predicates",
+      "version": "3.0.3",
+      "license": "Unlicense"
+    },
+    {
+      "name": "roughjs",
+      "version": "4.6.6",
+      "license": "MIT"
+    },
+    {
+      "name": "stylis",
+      "version": "4.4.0",
+      "license": "MIT"
+    },
+    {
+      "name": "ts-dedent",
+      "version": "2.3.0",
       "license": "MIT"
     },
     {
       "name": "uc.micro",
       "version": "3.0.0",
       "license": "MIT"
+    },
+    {
+      "name": "uuid",
+      "version": "14.0.2",
+      "license": "MIT"
     }
   ],
-  "viewerJS_SHA256": "cdba1c34e718766e7131b95ddc61d4996e38ea6d1623f9ff1e750de42ac2d11f",
-  "sharedCoreJS_SHA256": "55d52bcc1c51e04c1c8af3989336ffe1b228679a9b280aae793332359fa49fcf",
+  "viewerJS_SHA256": "8cfb1f266cbfc2b589a7e1fe40f88f8c6b23d016ff6df5aea35a9ef5fab0c728",
+  "sharedCoreJS_SHA256": "2b4f5aae34cd0e422f51d3a8703fd6c75d20551738034cf20164a8c8a4982a15",
   "sharedMarkdownCSS_SHA256": "effec63057bc06aa2a5811ae26662eced1e39ca64897bf255379a4e602452983",
-  "presentationCSS_SHA256": "d02a74b5230a59eacac3362968431d69d0a443b616adeac93e1fcfd1bd1eefe6",
+  "presentationCSS_SHA256": "9e4b42236dae76b20bc794b2c6d9933a57f35471aabe39e1ff138c974ba8fca3",
   "interfaceJSON_SHA256": "e16e66433318ee7d37f4188694c9f67ac1c3b59081b5ca9dea99280d1dcc275d"
 }

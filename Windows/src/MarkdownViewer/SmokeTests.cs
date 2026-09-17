@@ -349,6 +349,33 @@ public partial class MainWindow
             await File.WriteAllTextAsync(watched,"# Inactive file");
             await Task.Delay(1200);
             Check("Previous file no longer refreshes", _currentPath == fixture && _currentText != "# Inactive file");
+            await File.WriteAllTextAsync(Path.Combine(fixtureDir,"rich.svg"), """
+                <svg xmlns="http://www.w3.org/2000/svg" width="240" height="80" onload="window.__mdbomRichAttack=true"><rect width="240" height="80" rx="12" fill="#dcefdc"/><text x="24" y="48" fill="#235633" font-size="22">Local SVG</text><script>window.__mdbomRichAttack=true</script></svg>
+                """);
+            using var richScript = new StreamReader(typeof(MainWindow).Assembly.GetManifestResourceStream("Tests/rich-content.js")!);
+            await Browser.ExecuteScriptAsync(await richScript.ReadToEndAsync());
+            await Browser.ExecuteScriptAsync("window.richResult=null; window.richRequest=null; runRichChecks(document.getElementById('content'), text => new Promise(resolve=>{window.richDone=resolve;window.richRequest=text;})).then(result=>window.richResult=result).catch(error=>window.richResult={error:String(error)});");
+            for(var i=0;i<100 && !await Js("window.richResult !== null");i++) {
+                using var request = JsonDocument.Parse(await Browser.ExecuteScriptAsync("window.richRequest"));
+                if(request.RootElement.ValueKind == JsonValueKind.String) {
+                    var before = await Browser.ExecuteScriptAsync("document.documentElement.dataset.renderCount");
+                    Post(new {type="render",markdown=request.RootElement.GetString(),name="rich.md",baseUrl=_server!.DocumentBaseUrl,view="reading"});
+                    await WaitUntil($"document.documentElement.dataset.renderCount !== {before}");
+                    await Browser.ExecuteScriptAsync("window.richRequest=null; window.richDone()");
+                }
+                await Task.Delay(100);
+            }
+            await WaitUntil("window.richResult !== null");
+            using var richReport = JsonDocument.Parse(await Browser.ExecuteScriptAsync("window.richResult"));
+            foreach(var check in richReport.RootElement.EnumerateObject()) Check("Rich content: " + check.Name, check.Value.ValueKind == JsonValueKind.True);
+            Post(new {type="theme",theme="light"});
+            ChangeWorkspace("view","reading");
+            await Task.Delay(150);
+            await CaptureWindowAsync(Path.Combine(directory,"rich-light.png"));
+            Post(new {type="theme",theme="dark"});
+            ChangeWorkspace("view","horizontal");
+            await Task.Delay(150);
+            await CaptureWindowAsync(Path.Combine(directory,"rich-dark-split.png"));
             using var printFixture = new StreamReader(typeof(MainWindow).Assembly.GetManifestResourceStream("Tests/print.md")!);
             var printPath = Path.Combine(fixtureDir,"Print.md");
             await File.WriteAllTextAsync(printPath,await printFixture.ReadToEndAsync());

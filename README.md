@@ -2,18 +2,18 @@
 
 마크다운 문서를 가볍게 보다.
 
-**현재 베타: 1.0.0-beta.3 (1.0 베타 3).** macOS와 Windows용 읽기 전용 Markdown 뷰어입니다. 두 앱은 같은 렌더러·본문 스타일·도구 패널을 사용하며, 창과 파일 처리는 운영체제별 네이티브 코드로 구현합니다. Electron이나 별도 서버 없이 번들 자산으로 오프라인 렌더링합니다.
+**현재 베타: 1.0.0-beta.4 (1.0 베타 4).** macOS와 Windows용 읽기 전용 Markdown 뷰어입니다. 두 앱은 같은 렌더러·본문 스타일·도구 패널을 사용하며, 창과 파일 처리는 운영체제별 네이티브 코드로 구현합니다. Electron이나 별도 서버 없이 번들 자산으로 오프라인 렌더링합니다.
 
 개인적으로 개발해 공유하는 오픈소스 프로그램이며, 농촌진흥청의 공식 프로그램은 아닙니다.
 
 ## 설치와 업데이트
 
-[**1.0 베타 3 다운로드**](https://github.com/thlee/mdbom/releases/tag/v1.0.0-beta.3) · [**사용설명서**](HELP.md)
+[**1.0 베타 4 다운로드**](https://github.com/thlee/mdbom/releases/tag/v1.0.0-beta.4) · [**사용설명서**](HELP.md)
 
 | 운영체제 | 설치 파일 | 설치 방법 |
 | --- | --- | --- |
-| Windows 10 22H2 / 11 x64 | [설치 EXE](https://github.com/thlee/mdbom/releases/download/v1.0.0-beta.3/MDBom-1.0.0-beta.3-Setup-x64.exe) | 내려받은 파일 실행 |
-| macOS 14 이상 · Apple Silicon | [설치 DMG](https://github.com/thlee/mdbom/releases/download/v1.0.0-beta.3/MDBom-1.0.0-beta.3-macOS-arm64.dmg) | 앱을 Applications로 이동 |
+| Windows 10 22H2 / 11 x64 | [설치 EXE](https://github.com/thlee/mdbom/releases/download/v1.0.0-beta.4/MDBom-1.0.0-beta.4-Setup-x64.exe) | 내려받은 파일 실행 |
+| macOS 14 이상 · Apple Silicon | [설치 DMG](https://github.com/thlee/mdbom/releases/download/v1.0.0-beta.4/MDBom-1.0.0-beta.4-macOS-arm64.dmg) | 앱을 Applications로 이동 |
 
 두 설치 파일에는 SHA-256 확인 파일과 `HELP.md`를 제공합니다. 앱 도구바의 **도움말(?)** 버튼으로도 설명서를 볼 수 있습니다. 공개 릴리스의 설치 파일은 로그인 없이 내려받을 수 있습니다.
 
@@ -77,11 +77,13 @@
 
 ## 오프라인 동작과 지원 범위
 
-markdown-it, DOMPurify, highlight.js 및 CSS를 앱에 포함합니다. 문서를 업로드하거나 CDN·외부 폰트·분석 서비스를 호출하지 않습니다. HTML은 표시 전에 정리하며 스크립트, 이벤트 핸들러, iframe, 폼, 임의 스타일을 제거합니다. 각 호스트의 요청 제한과 CSP가 원격 자산을 차단합니다.
+markdown-it, DOMPurify, highlight.js, KaTeX, Mermaid 및 CSS를 앱에 포함합니다. 문서를 업로드하거나 CDN·외부 폰트·분석 서비스를 호출하지 않습니다. HTML은 표시 전에 정리하며 스크립트, 이벤트 핸들러, iframe, 폼, 임의 스타일을 제거합니다. 각 호스트의 요청 제한과 CSP가 원격 자산을 차단합니다.
 
 로컬 이미지와 Markdown 링크는 문서 폴더 및 하위 폴더로 제한합니다. 원격 이미지는 로드하지 않고, 사용자가 누른 웹·메일 링크만 기본 앱으로 엽니다. 허용하는 이미지 형식·인코딩·파일 크기는 플랫폼 안내에 명시합니다.
 
-Mermaid, LaTeX/KaTeX, SVG 및 편집 기능은 지원하지 않습니다. 100,000자 이상 코드 블록은 강조를 생략합니다. Windows WebView2 Runtime의 설치·시스템 업데이트는 앱의 오프라인 렌더링과 별개입니다.
+KaTeX 수식(`$…$`, `$$…$$`), Mermaid 코드 블록 및 로컬 SVG 이미지를 지원합니다. [수식·그림 예제](Examples/Math-and-diagrams.md)를 열어 보세요. 수식은 KaTeX가 지원하는 LaTeX 문법 범위이며 전체 LaTeX 문서 엔진은 아닙니다. Mermaid는 문서당 20개, 각 20,000자·연결 200개까지 표시하며 설정 지시문·클릭 동작·외부 리소스는 허용하지 않습니다. 다이어그램은 밝은 배경의 이미지로 표시하고 접을 수 있는 원문을 함께 제공합니다. 오류가 있으면 원문을 유지합니다.
+
+본문에 직접 넣은 `<svg>` 태그와 편집 기능은 지원하지 않습니다. 100,000자 이상 코드 블록은 강조를 생략합니다. Windows WebView2 Runtime의 설치·시스템 업데이트는 앱의 오프라인 렌더링과 별개입니다.
 
 ## 소스에서 빌드
 
@@ -111,7 +113,7 @@ Mermaid, LaTeX/KaTeX, SVG 및 편집 기능은 지원하지 않습니다. 100,00
 
 ## 버전 정책
 
-첫 공개 버전은 **1.0 베타 3 (`1.0.0-beta.3`)**입니다. 이후 베타는 `beta.4`, `beta.5` 순서로 올리고 정식판은 `1.0.0`으로 배포합니다. 앱 식별자와 설정 저장 위치는 호환성을 위해 유지합니다.
+첫 공개 버전은 **1.0 베타 3 (`1.0.0-beta.3`)**입니다. 현재는 베타 4이며 이후 베타 번호를 순서대로 올리고 정식판은 `1.0.0`으로 배포합니다. 앱 식별자와 설정 저장 위치는 호환성을 위해 유지합니다.
 
 ## 기여자
 

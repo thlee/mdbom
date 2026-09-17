@@ -10,14 +10,17 @@
   let documentBase = '';
   let dropDepth = 0;
   let renderCount = 0;
+  let renderGeneration=0;
+  let currentRender=Promise.resolve();
   const search = window.MarkdownViewerCore.createSearch(workspace, content, sourceContent);
   const send = payload => window.chrome.webview.postMessage(payload);
-  function render(markdown, name, baseUrl, view = 'reading', preserveScroll = false) {
+  async function render(markdown, name, baseUrl, view = 'reading', preserveScroll = false) {
+    const generation=++renderGeneration;
     const snapshot = preserveScroll ? workspace.captureViewport() : null;
     documentBase = baseUrl;
     const fragment = window.MarkdownViewerCore.render(markdown, {
       baseURL: baseUrl, headingPrefix: '', localMarkdownLinks: true,
-      imageExtensions: ['png', 'jpg', 'jpeg', 'gif', 'webp', 'bmp', 'ico']
+      imageExtensions: ['png', 'jpg', 'jpeg', 'gif', 'webp', 'bmp', 'ico', 'svg']
     });
     content.replaceChildren(fragment);
     // Keep the exact decoded file text. Raw HTML in the source is never parsed.
@@ -30,6 +33,8 @@
     $('welcome').hidden = true;
     $('reader').hidden = false;
     $('notice').hidden = true;
+    await window.MarkdownViewerCore.enhanceDiagrams(content);
+    if(generation!==renderGeneration)return;
     positionSync.load();
     setView(view, false);
     workspace.configure(presentation, documentView);
@@ -93,11 +98,16 @@
     e.preventDefault(); dropDepth = 0; $('dropoverlay').hidden = true;
     if (e.dataTransfer.files.length) window.chrome.webview.postMessageWithAdditionalObjects({ type: 'drop' }, e.dataTransfer.files);
   });
-  window.chrome.webview.addEventListener('message', e => {
+  window.chrome.webview.addEventListener('message', async e => {
     try {
       const data = e.data;
       if (data.type === 'presentation') { presentation = data; workspace.configure(data, documentView); }
-      else if (data.type === 'render') render(data.markdown, data.name, data.baseUrl, data.view, data.preserveScroll);
+      else if (data.type === 'render') await (currentRender=render(data.markdown, data.name, data.baseUrl, data.view, data.preserveScroll));
+      else if (data.type === 'preparePrint') {
+        let pending;
+        do { pending=currentRender; await pending; } while(pending!==currentRender);
+        send({type:'printReady'});
+      }
       else if (data.type === 'view') setView(data.view);
       else if (data.type === 'width') {
         for (const mode of ['reading', 'source']) {

@@ -75,3 +75,9 @@ Windows의 `Packaging/MDBom.iss`는 사용자별 고정 설치 위치 `%LOCALAPP
 `Build-Installer.ps1`는 빌드한 EXE의 버전으로 설치 파일명과 SHA-256을 생성합니다. WebView2 Evergreen Runtime 등록을 설치 전에 확인하며, 누락 시 안내 후 중단합니다. ZIP 배포의 선택적 Fixed Version Runtime과 별개로 설치 EXE는 Evergreen 등록을 요구합니다. CI의 설치 수명주기 검사는 일회용 사용자 환경에서 수행합니다.
 
 Mac은 `macOS/Scripts/package-dmg.sh`가 앱과 Applications 링크를 묶어 DMG를 만들고 다시 마운트하여 검증합니다. 패키징은 앱 자체 버전을 변경하지 않습니다.
+
+## 수식과 다이어그램
+
+`rich-content.js`는 Markdown 토큰 단계에서 수식을 인식합니다. KaTeX는 외부 리소스를 허용하지 않는 MathML 출력으로 동기 변환하고, 별도 DOMPurify 인스턴스로 정리합니다. Mermaid는 strict 모드에서 직렬 비동기 렌더링하며 생성된 SVG를 정리해 이미지로 넣습니다. 일반 본문의 SVG 태그는 여전히 허용하지 않습니다. 로컬 SVG 파일은 네이티브 이미지 요청 경로로만 엽니다.
+
+어댑터는 다이어그램 이미지 준비 후 원문 위치와 스크롤을 복원합니다. 원래 코드 블록의 위치 표시는 유지하고 코드 자체는 접을 수 있는 details에 남깁니다. Windows 인쇄는 현재 렌더링 완료를 기다리며 Mac은 렌더링 중 인쇄를 시작하지 않습니다. 의존성 라이선스 목록은 esbuild의 실제 포함 모듈에서 생성합니다.

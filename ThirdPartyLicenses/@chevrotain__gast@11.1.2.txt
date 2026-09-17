@@ -1,5 +1,6 @@
-dompurify 3.4.15
+@chevrotain/gast 11.1.2
 
+LICENSE.txt
 
                                  Apache License
                            Version 2.0, January 2004

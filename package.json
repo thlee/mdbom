@@ -7,11 +7,16 @@
     "bundle": "node Scripts/bundle-assets.mjs"
   },
   "dependencies": {
-    "markdown-it": "15.0.2",
     "dompurify": "3.4.15",
-    "highlight.js": "11.12.0"
+    "highlight.js": "11.12.0",
+    "katex": "0.18.7",
+    "markdown-it": "15.0.2",
+    "mermaid": "12.0.0"
   },
   "devDependencies": {
     "esbuild": "0.28.2"
+  },
+  "overrides": {
+    "lodash-es": "4.18.1"
   }
 }

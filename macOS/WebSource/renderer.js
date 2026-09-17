@@ -33,7 +33,7 @@ window.viewer = Object.freeze({
     workspace.configure(options, view);
     if (options.view !== view) setView(options.view);
   },
-  render(markdown, name, preserveScroll = false) {
+  async render(markdown, name, preserveScroll = false) {
     const remember = preserveScroll && filename === name;
     const position = remember ? workspace.captureViewport() : null;
     filename = name;
@@ -43,6 +43,7 @@ window.viewer = Object.freeze({
     document.title = name ? name + ' — 엠디봄' : '엠디봄';
     reader.replaceChildren(window.MarkdownViewerCore.render(markdown));
     window.MarkdownViewerCore.showSource(source, markdown);
+    await window.MarkdownViewerCore.enhanceDiagrams(reader);
     positionSync.load();
     document.getElementById('documentname').textContent = name;
     if (opened && !markdown.trim()) {

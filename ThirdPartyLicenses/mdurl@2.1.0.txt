@@ -1,5 +1,6 @@
 mdurl 2.1.0
 
+LICENSE
 Copyright (c) 2015 Vitaly Puzrin, Alex Kocharin.
 
 Permission is hereby granted, free of charge, to any person
