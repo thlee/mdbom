@@ -67,12 +67,12 @@ public partial class MainWindow
 
                 ![local](pixel.png)
                 ![remote](https://example.com/should-never-load.png)
-                <img src=x onerror="window.injected=true">
-                <script>window.injected=true</script>
+                <img src=x onerror="window.__mdbomScriptAttack=true">
+                <script>window.__mdbomScriptAttack=true</script>
                 <iframe src="https://example.com"></iframe>
-                <svg onload="window.injected=true"></svg>
+                <svg onload="window.__mdbomScriptAttack=true"></svg>
                 <form><input type=text value=edit></form>
-                <a href="javascript:window.injected=true">bad link</a>
+                <a href="javascript:window.__mdbomScriptAttack=true">bad link</a>
                 <div id="content" name="chrome" style="position:fixed">Safe text</div>
                 """;
             await File.WriteAllTextAsync(fixture, markdown, new UTF8Encoding(false));
@@ -85,7 +85,7 @@ public partial class MainWindow
             Check("Task lists are disabled", await Js("document.querySelectorAll('#content input:disabled').length === 2 && document.querySelectorAll('#content input:checked').length === 1"));
             Check("Fenced code is highlighted", await Js("document.querySelectorAll('#content .hljs-keyword').length > 0"));
             Check("Unknown code language remains literal", await Js("document.querySelector('#content .language-unknown-language').textContent.includes('<script>literal code</script>')"));
-            Check("Sanitizer removes executable markup", await Js("!window.injected && !document.querySelector('#content script, #content iframe, #content svg, #content form, #content [onerror], #content [style], #content input:not([type=checkbox])')"));
+            Check("Sanitizer removes executable markup", await Js("!window.__mdbomScriptAttack && !document.querySelector('#content script, #content iframe, #content svg, #content form, #content [onerror], #content [style], #content input:not([type=checkbox])')"));
             Check("Sanitizer prevents DOM clobbering", await Js("document.querySelectorAll('#content').length === 1 && !document.querySelector('#content [name]')"));
             Check("Unsafe links removed", await Js("![...document.querySelectorAll('#content a')].some(a=>a.href.startsWith('javascript:'))"));
             Check("External images suppressed", await Js("!document.querySelector('#content img[src^=\"https://example.com\"]') && document.querySelector('.image-placeholder') !== null"));
@@ -124,7 +124,7 @@ public partial class MainWindow
             await WaitUntil("document.documentElement.dataset.view === 'source'");
             Check("Toolbar switches to source view", await Js("document.getElementById('content').hidden && !document.getElementById('sourcecontent').hidden"));
             Check("Source preserves the exact decoded Markdown", JsonSerializer.Deserialize<string>(await Browser.ExecuteScriptAsync("document.getElementById('sourcecontent').textContent")) == markdown);
-            Check("Source HTML remains inert text", await Js("document.getElementById('sourcecontent').children.length === 0 && !window.injected && !document.getElementById('sourcecontent').isContentEditable"));
+            Check("Source HTML remains inert text", await Js("document.getElementById('sourcecontent').children.length === 0 && !window.__mdbomScriptAttack && !document.getElementById('sourcecontent').isContentEditable"));
             await Browser.ExecuteScriptAsync("var selectionRange=document.createRange(); selectionRange.selectNodeContents(document.getElementById('sourcecontent')); window.getSelection().removeAllRanges(); window.getSelection().addRange(selectionRange)");
             Check("Source text can be selected for copying", JsonSerializer.Deserialize<string>(await Browser.ExecuteScriptAsync("window.getSelection().toString()")) == markdown);
             ExecuteCommand("find");

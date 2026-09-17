@@ -75,6 +75,11 @@ async function diagram(source) {
     if(/^(?:href|xlink:href)$/i.test(attr.name)&&!attr.value.startsWith('#'))el.removeAttribute(attr.name);
     if(/(?:https?:|javascript:|file:|data:|@import)/i.test(attr.value))el.removeAttribute(attr.name);
   }
+  // Explicit intrinsic size prevents Chromium from rasterizing a percentage-width SVG at 300px.
+  const box=(root.getAttribute('viewBox')||'').trim().split(/[\s,]+/).map(Number);
+  if(box.length===4&&box.every(Number.isFinite)&&box[2]>0&&box[3]>0) {
+    root.setAttribute('width',String(box[2]));root.setAttribute('height',String(box[3]));
+  }
   root.setAttribute('xmlns','http://www.w3.org/2000/svg');
   return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(new XMLSerializer().serializeToString(root));
 }

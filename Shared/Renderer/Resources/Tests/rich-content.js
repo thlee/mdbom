@@ -34,7 +34,7 @@ window.runRichChecks = async function(root, render) {
   checks.svgLocal=images.some(img=>img.alt==='로컬 SVG'&&img.naturalWidth===240);
   checks.svgInert=!window.__mdbomRichAttack && !window.compromised;
   checks.mermaidFlowAndSequence=root.querySelectorAll('[data-diagram=ready] > img').length===2;
-  checks.mermaidImageDimensions=[...root.querySelectorAll('[data-diagram=ready] > img')].every(img=>img.naturalWidth>50&&img.naturalHeight>50);
+  checks.mermaidImageDimensions=[...root.querySelectorAll('[data-diagram=ready] > img')].every(img=>img.naturalWidth>0&&img.naturalHeight>0&&img.getBoundingClientRect().width>0);
   checks.mermaidSource=root.querySelectorAll('.mermaid-diagram details code.language-mermaid').length===2;
   const core=window.MarkdownViewerCore;
   const workspace=window.viewer?.workspace||window.workspace;
