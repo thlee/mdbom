@@ -61,3 +61,7 @@ GitHub Actions는 PR·main push·수동 실행에서 빌드하고 아래 아티�
 - `macOS-verification`, `Windows-verification`: 실행 검사 결과
 
 GitHub Releases 자동 게시나 앱 자체 업데이트 다운로드는 구현하지 않았습니다. 새 설치 파일을 실행하거나 Mac 앱을 교체하여 업데이트합니다. Windows 설치 EXE는 미서명이고 Mac은 로컬 ad-hoc 서명입니다. 외부 배포용 코드 서명·Developer ID 공증은 별도로 준비해야 합니다.
+
+## README 언어 관리
+
+README.md는 한국어 기본 문서이고 README.en.md는 영어 문서입니다. 버전·다운로드 링크·지원 기능·제한·빌드 명령이 바뀌면 두 문서를 함께 갱신합니다. 언어 전환 링크는 두 문서 상단에 유지합니다. 영어 README 추가는 앱 UI나 내장 도움말의 언어 변경을 의미하지 않습니다.
