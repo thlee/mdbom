@@ -175,7 +175,7 @@ export function createWorkspace(reading, source, send) {
   }
   const command = name => () => send({action:'command',command:name});
   const separator=()=>{const el=document.createElement('span');el.className='tool-separator';el.setAttribute('aria-hidden','true');floating.append(el);};
-  tool('열기','open',command('open'),true);tool('새로고침','reload',command('reload'));tool('인쇄 · PDF','print',command('print'));tool('검색','find',command('find'));tool('HTML로 내보내기','export',command('exportHTML'));
+  tool('열기','open',command('open'),true);tool('새로고침','reload',command('reload'));tool('HTML로 내보내기','export',command('exportHTML'));tool('인쇄 · PDF','print',command('print'));tool('검색','find',command('find'));
   separator();
   const viewGroup=document.createElement('div');viewGroup.className='view-segments';viewGroup.setAttribute('role','group');viewGroup.setAttribute('aria-label','문서 보기');floating.append(viewGroup);
   const viewButtons=new Map();
