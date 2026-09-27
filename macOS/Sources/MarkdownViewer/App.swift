@@ -107,6 +107,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
     var active: ViewerWindowController? {
         windows.first { $0.window === NSApp.keyWindow }
     }
+    @objc func exportHTML(_ sender: Any?) { active?.model.exportHTML?() }
     @objc func printDocument(_ sender: Any?) { active?.model.printDocument?() }
     @objc func reloadDocument(_ sender: Any?) { active?.model.reload() }
     @objc func revealDocument(_ sender: Any?) { active?.model.reveal() }
@@ -128,7 +129,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
     }
 
     func validateMenuItem(_ item: NSMenuItem) -> Bool {
-        if [#selector(printDocument), #selector(reloadDocument), #selector(revealDocument), #selector(find), #selector(toggleSource)].contains(item.action) {
+        if [#selector(exportHTML), #selector(printDocument), #selector(reloadDocument), #selector(revealDocument), #selector(find), #selector(toggleSource)].contains(item.action) {
             return active?.model.url != nil
         }
         if [#selector(zoomIn), #selector(zoomOut), #selector(actualSize)].contains(item.action) {
@@ -197,6 +198,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         add(file, "Reload from Disk", #selector(reloadDocument), "r", target: self)
         add(file, "Show in Finder", #selector(revealDocument), target: self)
         file.addItem(.separator())
+        add(file, "Export HTML…", #selector(exportHTML), "", target: self)
         add(file, "Print…", #selector(printDocument), "p", target: self)
         file.addItem(.separator())
         add(file, "Close Window", #selector(NSWindow.performClose(_:)), "w")
@@ -236,3 +238,4 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         refreshRecentMenu()
     }
 }
+

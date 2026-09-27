@@ -108,6 +108,11 @@
         do { pending=currentRender; await pending; } while(pending!==currentRender);
         send({type:'printReady'});
       }
+      else if (data.type === 'prepareExport') {
+        let pending;
+        do { pending=currentRender; await pending; } while(pending!==currentRender);
+        send({type:'exportSnapshot', snapshot:window.MarkdownViewerCore.captureHTML(content,$('documentname').textContent)});
+      }
       else if (data.type === 'view') setView(data.view);
       else if (data.type === 'width') {
         for (const mode of ['reading', 'source']) {
@@ -124,3 +129,4 @@
   window.workspace = workspace;
   send({ type: 'ready' });
 })();
+

@@ -193,6 +193,7 @@ public partial class MainWindow : Window
                     if (root.GetProperty("action").GetString() == "command") ExecuteCommand(root.GetProperty("command").GetString());
                     else ChangeWorkspace(root.GetProperty("key").GetString(), root.GetProperty("value").GetString());
                     break;
+                case "exportSnapshot": _exportSnapshot?.TrySetResult(root.GetProperty("snapshot").GetRawText()); break;
                 case "printReady":
                     if (_printRequested) { _printRequested = false; Browser.CoreWebView2.ShowPrintUI(CoreWebView2PrintDialogKind.Browser); }
                     break;
@@ -263,6 +264,7 @@ public partial class MainWindow : Window
             case "open": OpenDialog(); break;
             case "reload": if (_currentPath is not null) _ = OpenFileAsync(_currentPath); break;
             case "find": Post(new { type = "find" }); break;
+            case "exportHTML": _ = ExportHtmlAsync(); break;
             case "print":
                 if (_currentPath is not null && Browser.CoreWebView2 is not null)
                 { _printRequested = true; Post(new {type="preparePrint"}); }
@@ -415,3 +417,4 @@ public partial class MainWindow : Window
         Browser.Dispose();
     }
 }
+

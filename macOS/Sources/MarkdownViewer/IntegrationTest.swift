@@ -252,6 +252,14 @@ final class IntegrationTest {
             try await snapshot("rich-light.png")
             _ = try await web.evaluateJavaScript("viewer.configure({theme:'dark',layout:'horizontal'}); true")
             try await snapshot("rich-dark-split.png")
+            _ = try await web.evaluateJavaScript(String(contentsOf: RendererAssets.scrollChecks.deletingLastPathComponent().appendingPathComponent("html-export.js"), encoding: .utf8) + "\ntrue;")
+            for mode in ["reading", "source", "horizontal", "vertical"] {
+                _ = try await web.callAsyncJavaScript("viewer.configure({view:mode==='source'?'source':'reading',layout:['reading','source'].includes(mode)?'single':mode}); return true", arguments: ["mode":mode], in: nil, contentWorld: .page)
+                let html = try await coordinator.createHTMLExport()
+                try html.write(to: reportURL.deletingLastPathComponent().appendingPathComponent("export-" + mode + ".html"), atomically: true, encoding: .utf8)
+                let exportChecks = try await web.callAsyncJavaScript("return checkHTMLExport(html)", arguments: ["html":html], in: nil, contentWorld: .page) as? [String: Bool] ?? ["report":false]
+                for (key,value) in exportChecks { checks["export_" + mode + "_" + key] = value }
+            }
             let printable = try String(contentsOf: RendererAssets.scrollChecks.deletingLastPathComponent().appendingPathComponent("print.md"), encoding: .utf8)
             for mode in ["reading", "source", "horizontal", "vertical"] {
                 _ = try await web.callAsyncJavaScript("""
@@ -432,3 +440,4 @@ final class IntegrationTest {
     };
     """#
 }
+

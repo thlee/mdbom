@@ -376,6 +376,15 @@ public partial class MainWindow
             ChangeWorkspace("view","horizontal");
             await Task.Delay(150);
             await CaptureWindowAsync(Path.Combine(directory,"rich-dark-split.png"));
+            using (var exportScript = new StreamReader(typeof(MainWindow).Assembly.GetManifestResourceStream("Tests/html-export.js")!))
+                await Browser.ExecuteScriptAsync(await exportScript.ReadToEndAsync());
+            foreach (var mode in new[]{"reading","source","horizontal","vertical"}) {
+                ChangeWorkspace("view",mode);
+                var html = await CreateHtmlExportAsync();
+                await File.WriteAllTextAsync(Path.Combine(directory,"export-"+mode+".html"),html);
+                using var report = JsonDocument.Parse(await Browser.ExecuteScriptAsync("checkHTMLExport("+JsonSerializer.Serialize(html)+")"));
+                foreach(var check in report.RootElement.EnumerateObject()) Check("HTML export "+mode+": "+check.Name,check.Value.ValueKind==JsonValueKind.True);
+            }
             using var printFixture = new StreamReader(typeof(MainWindow).Assembly.GetManifestResourceStream("Tests/print.md")!);
             var printPath = Path.Combine(fixtureDir,"Print.md");
             await File.WriteAllTextAsync(printPath,await printFixture.ReadToEndAsync());
@@ -437,3 +446,4 @@ public partial class MainWindow
     }
 
 }
+

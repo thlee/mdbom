@@ -51,6 +51,7 @@ final class ViewerModel: ObservableObject {
     @Published var findStatus = ""
     @Published var rendered = false
     var printDocument: (() -> Void)?
+    var exportHTML: (() -> Void)?
 
     init(settings: ViewerSettings? = nil) {
         self.settings = settings ?? .shared
@@ -203,3 +204,4 @@ struct ViewerContentView: View {
         }
     }
 }
+

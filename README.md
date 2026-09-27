@@ -49,6 +49,13 @@ Open a document and choose **Print / PDF** in the toolbar, or press **⌘P on Ma
 
 Only the **formatted document** is printed, even in source-only or split views. The toolbar, search controls, and source pane are excluded. Printing uses a light background and fits the paper width independently of the on-screen width setting. Long code lines and table cells wrap; landscape paper can help with very wide tables. The app opens the print dialog, and you choose whether to print or save.
 
+## HTML export (next build)
+
+Choose **HTML로 내보내기 (Export HTML)** in the toolbar, or **File → Export HTML…** on Mac, then choose where to save the file. The formatted document is exported from any view, without the app toolbar or source pane. This feature is in development builds after Beta 4; the linked Beta 4 installers do not include it.
+
+The single HTML file includes styles, local images, SVG, math, and Mermaid diagrams, and preserves the current theme, document width, and font settings. It opens offline in a modern browser without MDBom or JavaScript. Math uses native MathML; system fonts may differ between computers. Expandable metadata and diagram source remain interactive using standard HTML.
+
+Web/email and in-document links are retained. Links to other local Markdown files are disabled because those documents are not exported. Missing or inaccessible images stop the export with an error. Images are limited to 20 MiB each and 100 MiB total. The Markdown source remains unchanged.
 ## Automatic refresh
 
 Saving an open Markdown file in another editor updates the view in **about one second**. This is enabled by default and never writes to the original file. The app periodically checks file metadata and reads the contents only when a change is detected.
@@ -126,3 +133,4 @@ The first public release was **1.0 Beta 3 (`1.0.0-beta.3`)**. The current versio
 - **ChatGPT · OpenAI Codex (AI development assistant)** — Design discussions, implementation, fixes, testing, packaging, and documentation support
 
 MDBom is a personal open-source project developed through collaboration between its developer and an AI assistant.
+

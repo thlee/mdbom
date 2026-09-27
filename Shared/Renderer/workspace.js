@@ -146,6 +146,7 @@ export function createWorkspace(reading, source, send) {
   const floating = document.createElement('nav'); floating.id = 'floating-tools'; floating.hidden = true;
   floating.setAttribute('aria-label','문서 도구');
   const icons = {
+    export:'M12 3v12 M7 10l5 5 5-5 M4 16v5h16v-5',
     open:'M3 7h6l2 2h10l-2 11H3z M3 7V4h6l2 3',
     print:'M6 9V3h12v6 M6 17H3V9h18v8h-3 M6 14h12v7H6z M17 12h1',
     reload:'M20 7v5h-5 M20 12a8 8 0 1 0-2 6',
@@ -174,7 +175,7 @@ export function createWorkspace(reading, source, send) {
   }
   const command = name => () => send({action:'command',command:name});
   const separator=()=>{const el=document.createElement('span');el.className='tool-separator';el.setAttribute('aria-hidden','true');floating.append(el);};
-  tool('열기','open',command('open'),true);tool('새로고침','reload',command('reload'));tool('인쇄 · PDF','print',command('print'));tool('검색','find',command('find'));
+  tool('열기','open',command('open'),true);tool('새로고침','reload',command('reload'));tool('인쇄 · PDF','print',command('print'));tool('검색','find',command('find'));tool('HTML로 내보내기','export',command('exportHTML'));
   separator();
   const viewGroup=document.createElement('div');viewGroup.className='view-segments';viewGroup.setAttribute('role','group');viewGroup.setAttribute('aria-label','문서 보기');floating.append(viewGroup);
   const viewButtons=new Map();
@@ -309,3 +310,4 @@ export function createWorkspace(reading, source, send) {
   document.body.append(floating,reveal,widthPanel,fontPanel,helpDialog);
   return Object.freeze({positions,captureViewport,restoreViewport,configure,setView,root,synchronize,revealMatch,get active(){return active;},get layout(){return layout;}});
 }
+
