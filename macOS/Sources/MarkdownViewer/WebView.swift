@@ -252,13 +252,14 @@ final class WebCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageHandl
         completion?.resume(returning: success)
     }
     func createHTMLExport() async throws -> String {
-        guard let directory = handler.documentDirectory else { throw CocoaError(.fileReadNoSuchFile) }
+
         // Rendering is asynchronous (Mermaid); export only a completed snapshot.
         for _ in 0..<600 {
             if !renderInFlight { break }
             try await Task.sleep(nanoseconds: 100_000_000)
         }
         guard !renderInFlight else { throw URLError(.timedOut) }
+        guard let directory = handler.documentDirectory else { throw CocoaError(.fileReadNoSuchFile) }
         guard let snapshot = try await webView.callAsyncJavaScript(
             "return MarkdownViewerCore.captureHTML(document.getElementById('content'),document.getElementById('documentname').textContent)",
             arguments: [:], in: nil, contentWorld: .page) as? [String: Any],
@@ -380,4 +381,6 @@ final class WebCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageHandl
         model.issue = error.localizedDescription
     }
 }
+
+
 

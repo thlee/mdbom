@@ -43,11 +43,13 @@ public partial class MainWindow
         if (_exportSnapshot is not null) throw new InvalidOperationException("Export already in progress.");
         var directory = _server?.DocumentDirectory ?? throw new IOException("Open a document first.");
         var prefix = _server!.DocumentBaseUrl;
+        var revision = _openVersion;
         var request = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
         _exportSnapshot = request;
         try {
             Post(new { type = "prepareExport" });
             var snapshot = await request.Task.WaitAsync(TimeSpan.FromSeconds(60));
+            if (revision != _openVersion) throw new IOException("Document changed while preparing export. Please try again.");
             using var parsed = JsonDocument.Parse(snapshot);
             var images = new Dictionary<string,string>();
             long total = 0;
@@ -76,3 +78,4 @@ public partial class MainWindow
         } finally { _exportSnapshot = null; }
     }
 }
+
