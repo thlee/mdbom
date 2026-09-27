@@ -14,13 +14,16 @@ Welcome to **엠디봄** — a small, native home for your Markdown documents.
 | Syntax highlighting | ✓ |
 | Light & dark appearance | ✓ |
 | Offline reading | ✓ |
+| Source and split views | ✓ |
+| Math, Mermaid, and local SVG | ✓ |
+| Print / PDF | ✓ |
 
 ## A few things to try
 
-- [x] Open this document from Finder
+- [x] Open this document from Finder or File Explorer
 - [x] Read tables and highlighted code
 - [ ] Drop another Markdown file into this window
-- [ ] Press **⌘F** to find a word
+- [ ] Press **⌘F / Ctrl+F** to find a word
 
 These checkboxes show the document’s state and are read only.
 
@@ -48,8 +51,14 @@ for document in Path("notes").glob("*.md"):
 
 ## Comfortable reading
 
-Use `⌘+` and `⌘−` to change the reading size, or click the percentage to return to 100%.
-If another app changes the file, press **⌘R** to read it again.
+Use `⌘+` / `⌘−` on Mac or `Ctrl++` / `Ctrl+−` on Windows to zoom, or click the percentage to return to 100%.
+Changes saved by another editor appear automatically. To reload manually, press **⌘R / Ctrl+R**.
+
+Use the width and font panels to adjust the document and source separately. **⌘U / Ctrl+U** switches between document and source, keeping the same content near the top where possible. Split views show both at once.
+
+## Share a rendered copy
+
+Use **Print / PDF** to print the formatted document or save a PDF. Development builds after Beta 4 also provide **Export HTML**, immediately left of Print. It saves a single file containing styles and local images, with the current document theme, width, and font. The original Markdown stays unchanged. HTML export is not included in the published Beta 4 installers.
 
 Read **bold text**, *emphasis*, ~~strikethrough~~, and `inline code`.
 
@@ -65,6 +74,6 @@ Web links open in your default browser only when you click them.
 
 ![Bundled app icon](assets/icon.png)
 
-Images in this document’s folder or its subfolders can be displayed. PNG, JPEG, GIF, WebP, and AVIF are supported.
+Images in this document’s folder or its subfolders can be displayed. Both platforms support PNG, JPEG, GIF, WebP, and SVG; Mac also supports AVIF and Windows supports BMP/ICO.
 
 [Read the next page](More.markdown) · [Back to the top](#a-quiet-place-to-read)

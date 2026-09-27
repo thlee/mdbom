@@ -41,7 +41,7 @@ This English README documents the existing app; it does not change the language 
 - Print the formatted document or save it as PDF
 - Leading YAML metadata shown in a collapsed **Document information** section
 
-MDBom has no editing or saving features, and task-list checkboxes cannot be changed. Source view supports selecting and copying the original text. Switching between source and document views keeps the same paragraph or code line near the top where possible. Hidden syntax and the end of a document map to the nearest available display position.
+MDBom never edits or saves changes to the original Markdown file, and task-list checkboxes cannot be changed. PDF output and HTML export create separate copies. Source view supports selecting and copying the original text. Switching between source and document views keeps the same paragraph or code line near the top where possible. Hidden syntax and the end of a document map to the nearest available display position.
 
 ## Printing and PDF
 
@@ -51,11 +51,12 @@ Only the **formatted document** is printed, even in source-only or split views. 
 
 ## HTML export (next build)
 
-Choose **HTML로 내보내기 (Export HTML)** in the toolbar, or **File → Export HTML…** on Mac, then choose where to save the file. The formatted document is exported from any view, without the app toolbar or source pane. This feature is in development builds after Beta 4; the linked Beta 4 installers do not include it.
+Choose **HTML로 내보내기 (Export HTML)** immediately to the left of **Print / PDF** in the toolbar, or **File → Export HTML…** on Mac, then choose a name and location for the `.html` file. Canceling the save dialog creates no file. The formatted document is exported from any view, without the app toolbar or source pane. This feature is in development builds after Beta 4; the linked Beta 4 installers do not include it. Stable 1.0 has not been released.
 
 The single HTML file includes styles, local images, SVG, math, and Mermaid diagrams, and preserves the current theme, document width, and font settings. It opens offline in a modern browser without MDBom or JavaScript. Math uses native MathML; system fonts may differ between computers. Expandable metadata and diagram source remain interactive using standard HTML.
 
-Web/email and in-document links are retained. Links to other local Markdown files are disabled because those documents are not exported. Missing or inaccessible images stop the export with an error. Images are limited to 20 MiB each and 100 MiB total. The Markdown source remains unchanged.
+Web/email and in-document links are retained. Links to other local Markdown files are disabled because those documents are not exported. Remote images are not downloaded. Missing or inaccessible images stop the export with an error. Local images are limited to 20 MiB each and 100 MiB total. The Markdown source remains unchanged. The export is a snapshot: later source edits do not update it, and app search/view controls are not included.
+
 ## Automatic refresh
 
 Saving an open Markdown file in another editor updates the view in **about one second**. This is enabled by default and never writes to the original file. The app periodically checks file metadata and reads the contents only when a change is detected.
@@ -74,7 +75,7 @@ The **Width** and **Font** toolbar buttons open separate panels. Click the same 
 
 ## Views and toolbar
 
-Both apps use the **same floating toolbar**. It is pinned by default and groups file actions, view buttons, display settings, and the pin control. Selected view and scroll-link states are visible. The filename appears in the window title.
+Both apps use the **same floating toolbar**. In development builds, file actions appear in this order: **Open → Refresh → Export HTML → Print / PDF → Search**. It is pinned by default and groups file actions, view buttons, display settings, and the pin control. Selected view and scroll-link states are visible. The filename appears in the window title.
 
 - **Document / Source / Side-by-side / Stacked:** Source remains read-only and supports copying and searching. It appears on the left in side-by-side mode and above the document in stacked mode.
 - **Split ratio:** Drag the divider, or focus it and use the arrow keys. Home restores 50:50. The supported range is 20–80%.

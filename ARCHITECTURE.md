@@ -6,6 +6,7 @@
 
 ```text
 Shared/Renderer/renderer.js                 공통 파서·HTML 정리·체크리스트·코드 강조
+Shared/Renderer/export.js                   HTML 스냅샷·스타일·이미지 포함 및 독립 문서 생성
 Shared/Renderer/Resources/Web/core.js       라이브러리를 포함한 생성 번들
 Shared/Renderer/Resources/Web/markdown.css  공통 본문·표·코드 스타일
 Shared/Renderer/Resources/Web/presentation.css  시작·문서·소스 화면 스타일
@@ -67,6 +68,14 @@ Shared/Renderer/Resources/Web/interface.json    호스트 라벨·폭 프리셋/
 ## 인쇄
 
 공통 도구바의 `print` 명령을 Mac은 WKWebView의 `printOperation(with:)`, Windows는 WebView2의 `ShowPrintUI(Browser)`에 연결합니다. 화면과 동일한 정리된 DOM을 공통 `@media print` 스타일로 출력하며, 소스·도구 패널은 포함하지 않습니다. Mac은 인쇄 창이 열린 동안 화면 갱신을 보류하고 끝나면 위치를 복원한 뒤 보류된 문서 변경을 반영합니다. 테스트는 실제 출력 엔진의 PDF 저장 경로를 사용하며 물리 프린터에 전송하지 않습니다.
+
+## HTML 내보내기
+
+공통 도구바는 `exportHTML` 명령을 인쇄 바로 왼쪽에 배치합니다. `captureHTML(content, title)`은 정리된 본문의 DOM, 이미지 경로, 테마·CSS 변수·글꼴 설정을 캡처하고 `buildHTML(snapshot, images)`는 독립 HTML 문자열을 만듭니다. 번들 단계에서 본문·화면 CSS를 문자열로 포함하므로 외부 스타일 파일이 필요 없습니다. 앱 UI나 소스 패널은 캡처하지 않습니다.
+
+Windows의 `HtmlExport.cs`와 Mac의 `WebView.swift`는 렌더링 완료를 기다리고 문서 폴더 내부 이미지만 읽어 data URL로 전달합니다. 경로 제한과 이미지 형식, 개별 20 MiB·전체 100 MiB 제한을 네이티브 코드에서 검사합니다. Windows는 준비 중 문서가 바뀌면 내보내기를 중단하며 Mac은 내보내는 동안 화면 갱신을 보류합니다. 네이티브 저장 대화상자에서 경로를 선택한 뒤 Windows는 임시 파일 교체, Mac은 atomic 쓰기를 사용합니다.
+
+출력은 스크립트 없이 MathML·이미지·HTML details로 동작합니다. 추가 정리와 CSP로 실행 스크립트·외부 자산을 차단하며 로컬 문서 링크는 제거합니다. 웹·메일·문서 내부 링크는 유지합니다. 원본 Markdown을 수정하는 저장 기능과는 별개입니다. `Resources/Tests/html-export.js`의 공통 검사를 두 호스트의 통합 검사에서 호출합니다. 구현 여부와 실제 실행 검증 상태는 [검증 기록](VERIFICATION.md)을 구분해 확인합니다.
 
 ## 설치와 업데이트
 

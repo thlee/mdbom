@@ -12,6 +12,9 @@ One small window. Your words, beautifully readable.
 | Familiar formatting | Tables, lists, links, quotes, and images |
 | Code that reads well | Syntax highlighting for common languages |
 | Your preferred theme | System, light, or dark |
+| Your preferred layout | Document, source, side-by-side, or stacked |
+| Rich content | Math, Mermaid diagrams, and local SVG |
+| Share a copy | Print / PDF; HTML export in development builds |
 
 ## A little progress
 
@@ -32,6 +35,12 @@ Console.WriteLine("A quiet place to read.");
 ## Make yourself at home
 
 Press **Ctrl+O** to open another file, **Ctrl+R** to reload, or **Ctrl++ / Ctrl+−** to change the text size. The theme button cycles through System, Light, and Dark.
+
+Changes saved in another editor appear automatically. Use the width and font panels to adjust document and source settings separately. **Ctrl+U** switches between document and source while keeping the same content near the top where possible.
+
+## Save a rendered copy
+
+**Ctrl+P** opens Print / PDF for the formatted document, even in source or split view. Development builds after Beta 4 add **Export HTML** immediately to the left of Print. Choose a name and location to save one HTML file with styles, local images, math, and diagrams for offline viewing in a modern browser. The original Markdown stays unchanged. The published Beta 4 installers do not yet include HTML export.
 
 ### 한글도 편하게 읽으세요
 
