@@ -19,6 +19,8 @@ export function buildHTML(snapshot, images) {
   const doc = document.implementation.createHTMLDocument(snapshot.title);
   doc.documentElement.lang = document.documentElement.lang || 'en';
   doc.documentElement.dataset.theme = snapshot.theme;
+  // Standalone documents use page scrolling, never the app's split-pane layout.
+  doc.documentElement.dataset.layout = 'single';
   const charset = doc.createElement('meta'); charset.setAttribute('charset','utf-8');
   const viewport = doc.createElement('meta'); viewport.name='viewport'; viewport.content='width=device-width, initial-scale=1';
   const policy = doc.createElement('meta'); policy.httpEquiv='Content-Security-Policy';
