@@ -1,11 +1,14 @@
 import markdownCSS from './Resources/Web/markdown.css';
-import presentationCSS from './Resources/Web/presentation.css';
+import exportCSS from './export.css';
+
+const documentCSS = markdownCSS + '\n' + exportCSS;
+const documentVariables = new Set([...documentCSS.matchAll(/var\((--[\w-]+)/g)].map(match => match[1]));
 
 // Snapshot only the sanitized document, never the application shell or source pane.
 export function captureHTML(content, title) {
   const root = getComputedStyle(document.documentElement);
   const variables = {};
-  for (const key of root) if (key.startsWith('--')) variables[key] = root.getPropertyValue(key);
+  for (const key of documentVariables) variables[key] = root.getPropertyValue(key);
   const body = getComputedStyle(content);
   return {
     html: content.innerHTML, title,
@@ -18,19 +21,17 @@ export function captureHTML(content, title) {
 export function buildHTML(snapshot, images) {
   const doc = document.implementation.createHTMLDocument(snapshot.title);
   doc.documentElement.lang = document.documentElement.lang || 'en';
-  doc.documentElement.dataset.theme = snapshot.theme;
-  // Standalone documents use page scrolling, never the app's split-pane layout.
-  doc.documentElement.dataset.layout = 'single';
+  doc.documentElement.style.colorScheme = snapshot.theme;
   const charset = doc.createElement('meta'); charset.setAttribute('charset','utf-8');
   const viewport = doc.createElement('meta'); viewport.name='viewport'; viewport.content='width=device-width, initial-scale=1';
   const policy = doc.createElement('meta'); policy.httpEquiv='Content-Security-Policy';
   policy.content="default-src 'none'; img-src data:; style-src 'unsafe-inline'; font-src 'none'; base-uri 'none'; form-action 'none';";
   doc.head.prepend(charset, viewport, policy);
   const style = doc.createElement('style');
-  style.textContent = markdownCSS + '\n' + presentationCSS + '\n' +
-    'body{overflow:auto} main.markdown-body{max-width:var(--reading-width,920px);margin:0 auto;padding:32px;min-width:0} @media(max-width:600px){main.markdown-body{padding:20px}}';
+  style.textContent = documentCSS;
   doc.head.append(style);
-  for (const [key,value] of Object.entries(snapshot.variables)) doc.documentElement.style.setProperty(key,value);
+  for (const [key,value] of Object.entries(snapshot.variables))
+    if (documentVariables.has(key)) doc.documentElement.style.setProperty(key,value);
   const main = doc.createElement('main'); main.className='markdown-body';
   main.style.fontFamily=snapshot.font; main.style.fontSize=snapshot.size;
   main.innerHTML=snapshot.html;

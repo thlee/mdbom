@@ -395,6 +395,9 @@ public partial class MainWindow
                     exportedView.CoreWebView2.NavigationCompleted += (_, e) => loaded.TrySetResult(e.IsSuccess);
                     exportedView.NavigateToString(html);
                     if (!await loaded.Task.WaitAsync(TimeSpan.FromSeconds(20))) throw new IOException("Export preview failed to load");
+                    var expectedScheme=await Browser.ExecuteScriptAsync("getComputedStyle(document.documentElement).colorScheme");
+                    var actualScheme=await exportedView.ExecuteScriptAsync("getComputedStyle(document.documentElement).colorScheme");
+                    Check($"HTML export {mode} rendered theme",actualScheme==expectedScheme);
                     await exportedView.ExecuteScriptAsync("for(let i=0;i<80;i++){const p=document.createElement('p');p.textContent='Export scrolling regression paragraph '+i;document.querySelector('main').append(p)}");
                     foreach(var width in new[]{800,390}) {
                         exportedWindow.Width=width;
@@ -406,9 +409,9 @@ public partial class MainWindow
                         var bottom=await exportedView.ExecuteScriptAsync("(()=>{const r=document.querySelector('main > :last-child').getBoundingClientRect();return scrollY>0 && r.top>=0 && r.bottom<=innerHeight})()");
                         Check($"HTML export {mode} final paragraph visible at {width}px",bottom=="true");
                     }
-                    // Negative control: the old export omitted data-layout and hid scrolling.
-                    var oldOverflow=await exportedView.ExecuteScriptAsync("document.documentElement.removeAttribute('data-layout'); getComputedStyle(document.documentElement).overflowY");
-                    Check($"HTML export {mode} detects old scroll regression",oldOverflow=="\"hidden\"");
+                    // Export must scroll without any application layout attributes.
+                    var standalone=await exportedView.ExecuteScriptAsync("!document.documentElement.hasAttribute('data-layout') && getComputedStyle(document.documentElement).overflowY === 'auto'");
+                    Check($"HTML export {mode} scrolls without application state",standalone=="true");
                 } finally { exportedWindow.Close(); }
             }
             using var printFixture = new StreamReader(typeof(MainWindow).Assembly.GetManifestResourceStream("Tests/print.md")!);

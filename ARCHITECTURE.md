@@ -7,6 +7,7 @@
 ```text
 Shared/Renderer/renderer.js                 공통 파서·HTML 정리·체크리스트·코드 강조
 Shared/Renderer/export.js                   HTML 스냅샷·스타일·이미지 포함 및 독립 문서 생성
+Shared/Renderer/export.css                  독립 HTML의 레이아웃·수식·다이어그램·인쇄 스타일
 Shared/Renderer/Resources/Web/core.js       라이브러리를 포함한 생성 번들
 Shared/Renderer/Resources/Web/markdown.css  공통 본문·표·코드 스타일
 Shared/Renderer/Resources/Web/presentation.css  시작·문서·소스 화면 스타일
@@ -71,7 +72,7 @@ Shared/Renderer/Resources/Web/interface.json    호스트 라벨·폭 프리셋/
 
 ## HTML 내보내기
 
-공통 도구바는 `exportHTML` 명령을 인쇄 바로 왼쪽에 배치합니다. `captureHTML(content, title)`은 정리된 본문의 DOM, 이미지 경로, 테마·CSS 변수·글꼴 설정을 캡처하고 `buildHTML(snapshot, images)`는 독립 HTML 문자열을 만듭니다. 번들 단계에서 본문·화면 CSS를 문자열로 포함하므로 외부 스타일 파일이 필요 없습니다. 앱 UI나 소스 패널은 캡처하지 않습니다.
+공통 도구바는 `exportHTML` 명령을 인쇄 바로 왼쪽에 배치합니다. `captureHTML(content, title)`은 정리된 본문의 DOM, 이미지 경로, 테마·글꼴 및 내보내기 스타일이 참조하는 CSS 변수만 캡처하고 `buildHTML(snapshot, images)`는 독립 HTML 문자열을 만듭니다. `markdown.css`와 전용 `export.css`를 포함하고 앱 화면용 `presentation.css`는 제외합니다. 외부 스타일 파일이나 앱 레이아웃 속성이 필요 없으며 앱 UI나 소스 패널은 캡처하지 않습니다.
 
 Windows의 `HtmlExport.cs`와 Mac의 `WebView.swift`는 렌더링 완료를 기다리고 문서 폴더 내부 이미지만 읽어 data URL로 전달합니다. 경로 제한과 이미지 형식, 개별 20 MiB·전체 100 MiB 제한을 네이티브 코드에서 검사합니다. Windows는 준비 중 문서가 바뀌면 내보내기를 중단하며 Mac은 내보내는 동안 화면 갱신을 보류합니다. 네이티브 저장 대화상자에서 경로를 선택한 뒤 Windows는 임시 파일 교체, Mac은 atomic 쓰기를 사용합니다.
 

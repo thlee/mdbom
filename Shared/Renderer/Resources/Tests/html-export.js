@@ -13,7 +13,8 @@ window.checkHTMLExport = html => {
     titleEscaped: doc.title.length > 0 && !doc.querySelector('script,iframe,object,embed'),
     noAppLinks: ![...doc.querySelectorAll('a[href]')].some(a=>/mdviewer:|markdownviewer.invalid/.test(a.getAttribute('href'))),
     offlinePolicy: doc.querySelector('meta[http-equiv="Content-Security-Policy"]')?.content.includes("default-src 'none'"),
-    themePreserved: doc.documentElement.dataset.theme === (getComputedStyle(document.documentElement).colorScheme.includes('dark')?'dark':'light'),
+    themePreserved: doc.documentElement.getAttribute('style').includes('color-scheme: '+(getComputedStyle(document.documentElement).colorScheme.includes('dark')?'dark':'light')+';'),
+    noApplicationStyles: !/floating-tools|split-workspace|source-pane|workspace-help|data-layout|--source-/.test(html),
   };
 };
 
