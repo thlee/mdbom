@@ -12,7 +12,7 @@ const coreBuild = await build({
   entryPoints: [resolve(root, 'Shared/Renderer/renderer.js')],
   outfile: resolve(shared, 'core.js'), bundle: true, minify: true,
   platform: 'browser', target: ['safari17', 'chrome120'], format: 'iife',
-  metafile: true, globalName: 'MarkdownViewerCore', legalComments: 'inline', loader: {'.md':'text'}
+  metafile: true, globalName: 'MarkdownViewerCore', legalComments: 'inline', loader: {'.md':'text','.css':'text'}
 });
 await build({
   entryPoints: [resolve(root, 'macOS/WebSource/renderer.js')],
@@ -59,3 +59,4 @@ console.log(`Bundled offline renderer: ${(bytes.length / 1024).toFixed(0)} KB`);
 await writeFile(resolve(shared, 'dependencies.json'), JSON.stringify({
   generatedBy: 'npm run bundle', packages: manifest, coreJS_SHA256: hash(bytes), markdownCSS_SHA256: hash(cssBytes), presentationCSS_SHA256: hash(presentation), interfaceJSON_SHA256: hash(ui)
 }, null, 2) + '\n');
+

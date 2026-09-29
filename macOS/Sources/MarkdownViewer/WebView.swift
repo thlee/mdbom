@@ -1,4 +1,5 @@
 import AppKit
+import UniformTypeIdentifiers
 import SwiftUI
 import WebKit
 import ViewerCore
@@ -117,6 +118,7 @@ final class WebCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageHandl
     private var lastFind = 0
     private var renderInFlight = false
     private var printing = false
+    private var exporting = false
     private var printCompletion: CheckedContinuation<Bool, Never>?
     private var appliedPresentation: String?
     private var appliedTheme: String?
@@ -140,6 +142,7 @@ final class WebCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageHandl
         view.setValue(false, forKey: "drawsBackground")
         webView = view
         model.printDocument = { [weak self] in self?.printDocument() }
+        model.exportHTML = { [weak self] in self?.exportHTML() }
         // CSP is the primary resource policy; this also blocks every HTTP(S) resource at WebKit level.
         let rules = "[{\"trigger\":{\"url-filter\":\"^https?://\"},\"action\":{\"type\":\"block\"}}]"
         WKContentRuleListStore.default().compileContentRuleList(forIdentifier: "MarkdownViewerOffline-v1",
@@ -162,7 +165,7 @@ final class WebCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageHandl
     }
 
     func update() {
-        guard ready, !printing, let webView else { return }
+        guard ready, !printing, !exporting, let webView else { return }
         if abs(webView.pageZoom - model.zoom) > 0.001 { webView.pageZoom = model.zoom }
         let settings = model.settings
         let theme = settings.theme
@@ -248,6 +251,66 @@ final class WebCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageHandl
         let completion = printCompletion; printCompletion = nil
         completion?.resume(returning: success)
     }
+    func createHTMLExport() async throws -> String {
+
+        // Rendering is asynchronous (Mermaid); export only a completed snapshot.
+        for _ in 0..<600 {
+            if !renderInFlight { break }
+            try await Task.sleep(nanoseconds: 100_000_000)
+        }
+        guard !renderInFlight else { throw URLError(.timedOut) }
+        guard let directory = handler.documentDirectory else { throw CocoaError(.fileReadNoSuchFile) }
+        guard let snapshot = try await webView.callAsyncJavaScript(
+            "return MarkdownViewerCore.captureHTML(document.getElementById('content'),document.getElementById('documentname').textContent)",
+            arguments: [:], in: nil, contentWorld: .page) as? [String: Any],
+              let sources = snapshot["images"] as? [String] else { throw CocoaError(.fileReadCorruptFile) }
+        var images: [String: String] = [:]
+        var total = 0
+        for src in sources {
+            if src.hasPrefix("data:image/") { continue }
+            guard let url = URL(string: src), url.scheme == "mdviewer", url.host == "document" else {
+                throw CocoaError(.fileReadNoPermission)
+            }
+            let resource = try DocumentLoader.containedURL(path: String(url.path.dropFirst()), in: directory)
+            let types = ["png":"image/png", "jpg":"image/jpeg", "jpeg":"image/jpeg", "gif":"image/gif",
+                         "webp":"image/webp", "avif":"image/avif", "svg":"image/svg+xml"]
+            guard let mime = types[resource.pathExtension.lowercased()] else { throw CocoaError(.fileReadUnknown) }
+            let file = try FileHandle(forReadingFrom: resource)
+            let bytes: Data
+            do {
+                defer { try? file.close() }
+                bytes = try file.read(upToCount: 20 * 1024 * 1024 + 1) ?? Data()
+            }
+            total += bytes.count
+            guard bytes.count <= 20 * 1024 * 1024, total <= 100 * 1024 * 1024 else { throw CocoaError(.fileReadTooLarge) }
+            images[src] = "data:" + mime + ";base64," + bytes.base64EncodedString()
+        }
+        guard let html = try await webView.callAsyncJavaScript(
+            "return MarkdownViewerCore.buildHTML(snapshot, images)",
+            arguments: ["snapshot":snapshot, "images":images], in: nil, contentWorld: .page) as? String else {
+            throw CocoaError(.fileWriteUnknown)
+        }
+        return html
+    }
+
+    func exportHTML() {
+        guard ready, model.url != nil, !exporting, let window = webView.window else { return }
+        exporting = true
+        Task { [weak self] in
+            guard let self else { return }
+            defer { self.exporting = false; self.update() }
+            do {
+                let html = try await createHTMLExport()
+                let panel = NSSavePanel()
+                panel.title = "HTML로 내보내기"
+                panel.allowedContentTypes = [.html]
+                panel.nameFieldStringValue = (model.url?.deletingPathExtension().lastPathComponent ?? "Document") + ".html"
+                guard await panel.beginSheetModal(for: window) == .OK, let url = panel.url else { return }
+                guard ["html","htm"].contains(url.pathExtension.lowercased()) else { throw CocoaError(.fileWriteInvalidFileName) }
+                try html.write(to: url, atomically: true, encoding: .utf8)
+            } catch { model.issue = "HTML 내보내기 실패: \(error.localizedDescription)" }
+        }
+    }
     func printDocument() {
         guard ready, model.url != nil, !printing, !renderInFlight else { return }
         printing = true
@@ -284,6 +347,7 @@ final class WebCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageHandl
             case "open": openPanel()
             case "reload": model.reload()
             case "print": printDocument()
+            case "exportHTML": exportHTML()
             case "find": model.showFind.toggle()
             case "theme": model.cycleTheme()
             case "fullscreen": webView.window?.toggleFullScreen(nil)
@@ -317,3 +381,6 @@ final class WebCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageHandl
         model.issue = error.localizedDescription
     }
 }
+
+
+

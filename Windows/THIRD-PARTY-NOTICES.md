@@ -7,6 +7,8 @@ The Windows and macOS apps embed the same offline renderer built from the root p
 | markdown-it | 15.0.2 | MIT |
 | DOMPurify | 3.4.15 | Apache-2.0 OR MPL-2.0 |
 | highlight.js | 11.12.0 | BSD-3-Clause |
+| KaTeX | 0.18.7 | MIT |
+| Mermaid | 12.0.0 | MIT |
 | Microsoft.Web.WebView2 SDK | 1.0.4191.47 | Microsoft WebView2 SDK terms |
 | .NET Windows Desktop Runtime | 8.0.31 (self-contained release) | MIT and included third-party notices |
 

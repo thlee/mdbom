@@ -1,0 +1,35 @@
+/* Standalone document layout; no application toolbar, source pane, or split state. */
+* { box-sizing:border-box; }
+html { overflow-y:auto; }
+body { margin:0; background:var(--bg); color:var(--text); overflow-wrap:break-word; }
+main.markdown-body { max-width:var(--reading-width,920px); margin:0 auto; padding:32px; min-width:0; line-height:1.75; }
+@media(max-width:600px) { main.markdown-body { padding:20px; } }
+.markdown-body .front-matter { margin:0 0 26px; padding:0; border:1px solid var(--border); border-radius:8px; background:var(--surface); }
+.markdown-body .front-matter[open] > summary { margin-bottom:0; }
+.markdown-body .front-matter > summary { padding:10px 14px; color:var(--muted); font-size:13px; cursor:pointer; }
+.markdown-body .front-matter > pre { margin:0; border-top:1px solid var(--border); border-radius:0 0 8px 8px; }
+.math-block { overflow-x:auto; margin:1.2em 0; padding:8px 0; text-align:center; }
+.math-inline math { font-size:1.1em; }
+.math-error,.diagram-error { color:var(--muted); font-family:ui-monospace,monospace; }
+.mermaid-diagram { white-space:normal!important; padding:16px!important; }
+.mermaid-diagram > img { display:block; max-width:100%; height:auto; margin:auto; background:#fff; border-radius:6px; }
+.mermaid-diagram details { margin-top:12px; font:12px/1.5 -apple-system, sans-serif; }
+.mermaid-diagram summary { cursor:pointer; color:var(--muted); }
+.diagram-error { white-space:normal; padding:8px 0; font-size:12px; }
+@media print { .mermaid-diagram { break-inside:avoid; } .mermaid-diagram details { display:none!important; } .math-block { overflow:visible; } }
+
+@page { margin:14mm; }
+@media print {
+  :root { color-scheme:light!important; --bg:#fff!important; --surface:#f6f8fa!important; --soft:#f6f8fa!important; --text:#1f2328!important; --muted:#59636e!important; --border:#d1d9e0!important; --line:#d1d9e0!important; --link:#0969da!important; --accent:#0969da!important; --code:#f6f8fa!important; --quote:#d1d9e0!important; --syntax-keyword:#cf222e!important; --syntax-title:#8250df!important; --syntax-string:#0a3069!important; --syntax-number:#0550ae!important; --syntax-comment:#59636e!important; }
+  main.markdown-body { max-width:none; padding:0; font-size:11pt!important; line-height:1.55; }
+  .markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4 { break-after:avoid; }
+  .markdown-body p,.markdown-body li { orphans:3; widows:3; }
+  .markdown-body pre { white-space:pre-wrap!important; overflow-wrap:anywhere; overflow:visible!important; }
+  .markdown-body pre code { white-space:inherit!important; overflow-wrap:anywhere; }
+  .markdown-body table { display:table!important; width:100%; table-layout:fixed; overflow:visible!important; }
+  .markdown-body th,.markdown-body td { overflow-wrap:anywhere; }
+  .markdown-body thead { display:table-header-group; }
+  .markdown-body tr,.markdown-body img { break-inside:avoid; }
+  .markdown-body img { max-height:240mm; object-fit:contain; }
+  .markdown-body a { text-decoration:underline; }
+}

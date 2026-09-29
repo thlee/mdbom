@@ -41,6 +41,7 @@ UI를 바꿀 때는 `ARCHITECTURE.md`의 공통 화면 구성에 따라 두 운�
 ## 유지해야 하는 원칙
 
 - 읽기 전용: 원본 Markdown을 변경하거나 저장하지 않습니다.
+- HTML/PDF 내보내기는 별도 파일 생성으로 구현합니다. 앱 도구바·소스 패널을 제외하고 기존 HTML 정리·로컬 이미지 접근 제한을 유지합니다.
 - 오프라인: 렌더링에 CDN·서버·원격 폰트를 요구하지 않습니다.
 - 네이티브: macOS는 SwiftUI/AppKit/WKWebView, Windows는 WPF/WebView2 구조를 유지합니다.
 - 공통 렌더러는 `Shared/Renderer`에만 둡니다. 운영체제별 파서·정리 로직을 별도로 만들지 않습니다.
@@ -49,11 +50,11 @@ UI를 바꿀 때는 `ARCHITECTURE.md`의 공통 화면 구성에 따라 두 운�
 
 ## 배포
 
-기능 버전을 올릴 때는 `macOS/Packaging/Info.plist`와 `Windows/src/MarkdownViewer/MarkdownViewer.csproj`를 함께 확인하고 변경 이력 및 사용자 문서를 갱신합니다. 현재 표시 버전은 `1.0.0-beta.4`입니다. Mac의 `MDBomDisplayVersion`과 Windows의 `Version`을 맞춥니다. OS용 숫자 버전(Mac `CFBundleShortVersionString`, Windows `FileVersion`)은 별도로 관리하고 빌드 번호는 증가시킵니다. 도움말의 버전 표기도 함께 갱신합니다. 버전 번호를 변경하지 않은 패키징·문서 작업은 Unreleased로 기록합니다.
+기능 버전을 올릴 때는 `macOS/Packaging/Info.plist`와 `Windows/src/MarkdownViewer/MarkdownViewer.csproj`를 함께 확인하고 변경 이력 및 사용자 문서를 갱신합니다. 현재 소스 표시 버전은 `1.0.0`입니다. Mac의 `MDBomDisplayVersion`과 Windows의 `Version`을 맞춥니다. OS용 숫자 버전(Mac `CFBundleShortVersionString`, Windows `FileVersion`)은 별도로 관리하고 빌드 번호는 증가시킵니다. 도움말의 버전 표기도 함께 갱신합니다. 버전 번호를 변경하지 않은 패키징·문서 작업은 Unreleased로 기록합니다.
 
 저장소 루트에서 Mac은 `./Scripts/package-dmg.sh`, Windows는 `Publish.ps1` 후 `Build-Installer.ps1`을 실행합니다. 정확한 명령과 선행 도구는 각 플랫폼 README에 있습니다. Windows 설치 검사는 기존 앱·설정이 없는 일회용 계정에서만 `Test-Installer.ps1`로 실행합니다.
 
-GitHub Actions는 PR·main push·수동 실행에서 빌드하고 아래 아티팩트를 제공합니다.
+GitHub Actions는 비용 관리를 위해 현재 비활성화되어 있습니다. 명시적 요청 없이 켜지 않습니다. 기존 워크플로의 아티팩트 구성은 다음과 같습니다.
 
 - `MDBom-macOS-arm64`: Mac 앱 ZIP, 버전별 DMG와 SHA-256
 - `MDBom-win-x64`: Windows 자체 포함 배포 폴더
@@ -61,6 +62,14 @@ GitHub Actions는 PR·main push·수동 실행에서 빌드하고 아래 아티�
 - `macOS-verification`, `Windows-verification`: 실행 검사 결과
 
 GitHub Releases 자동 게시나 앱 자체 업데이트 다운로드는 구현하지 않았습니다. 새 설치 파일을 실행하거나 Mac 앱을 교체하여 업데이트합니다. Windows 설치 EXE는 미서명이고 Mac은 로컬 ad-hoc 서명입니다. 외부 배포용 코드 서명·Developer ID 공증은 별도로 준비해야 합니다.
+
+## 1.0 출시 전 확인
+
+현재 Mac 정식판은 1.0이며 Windows 공개 설치판은 베타 4입니다. 사용자의 현재 Mac 검증·출시 요청과 Actions 비활성화 방침에 따라 플랫폼별로 배포합니다. 각 플랫폼의 해당 릴리스 소스를 로컬 빌드·실행·설치 검증한 후 설치 파일과 SHA-256을 게시합니다. 다른 플랫폼의 예전 설치 파일을 1.0으로 이름만 바꾸거나 미실행 검사를 성공으로 기록하지 않습니다.
+
+HTML 내보내기는 라이트·다크 및 네 가지 보기에서 생성한 파일을 별도 최신 브라우저로 다시 열어 확인합니다. 저장 취소·기존 파일 덮어쓰기·이미지 누락·저장 권한 오류도 확인하고, PDF 출력과 원본 파일이 영향을 받지 않는지 검사합니다. 결과는 `VERIFICATION.md`와 플랫폼 검증 문서에 실제 수행 범위로 기록합니다.
+
+README 두 언어, `HELP.md`, 플랫폼 README, `CHANGELOG.md`, `ROADMAP.md`의 배포 상태를 함께 맞춥니다. 내장 도움말은 앱 빌드에 포함되므로 문서만 수정해도 사용자 앱에 반영하려면 새 빌드가 필요합니다.
 
 ## README 언어 관리
 

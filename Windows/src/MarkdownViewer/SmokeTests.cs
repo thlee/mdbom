@@ -376,6 +376,44 @@ public partial class MainWindow
             ChangeWorkspace("view","horizontal");
             await Task.Delay(150);
             await CaptureWindowAsync(Path.Combine(directory,"rich-dark-split.png"));
+            using (var exportScript = new StreamReader(typeof(MainWindow).Assembly.GetManifestResourceStream("Tests/html-export.js")!))
+                await Browser.ExecuteScriptAsync(await exportScript.ReadToEndAsync());
+            foreach (var mode in new[]{"reading","source","horizontal","vertical"}) {
+                ChangeWorkspace("view",mode);
+                var html = await CreateHtmlExportAsync();
+                await File.WriteAllTextAsync(Path.Combine(directory,"export-"+mode+".html"),html);
+                using var report = JsonDocument.Parse(await Browser.ExecuteScriptAsync("checkHTMLExport("+JsonSerializer.Serialize(html)+")"));
+                foreach(var check in report.RootElement.EnumerateObject()) Check("HTML export "+mode+": "+check.Name,check.Value.ValueKind==JsonValueKind.True);
+                // Load the exported document in a separate engine, without the app shell.
+                // DOMParser checks alone cannot detect CSS that disables page scrolling.
+                using var exportedView = new Microsoft.Web.WebView2.Wpf.WebView2();
+                var exportedWindow = new Window { Content=exportedView, Width=800, Height=600, ShowInTaskbar=false };
+                exportedWindow.Show();
+                try {
+                    await exportedView.EnsureCoreWebView2Async(Browser.CoreWebView2.Environment);
+                    var loaded = new TaskCompletionSource<bool>();
+                    exportedView.CoreWebView2.NavigationCompleted += (_, e) => loaded.TrySetResult(e.IsSuccess);
+                    exportedView.NavigateToString(html);
+                    if (!await loaded.Task.WaitAsync(TimeSpan.FromSeconds(20))) throw new IOException("Export preview failed to load");
+                    var expectedScheme=await Browser.ExecuteScriptAsync("getComputedStyle(document.documentElement).colorScheme");
+                    var actualScheme=await exportedView.ExecuteScriptAsync("getComputedStyle(document.documentElement).colorScheme");
+                    Check($"HTML export {mode} rendered theme",actualScheme==expectedScheme);
+                    await exportedView.ExecuteScriptAsync("for(let i=0;i<80;i++){const p=document.createElement('p');p.textContent='Export scrolling regression paragraph '+i;document.querySelector('main').append(p)}");
+                    foreach(var width in new[]{800,390}) {
+                        exportedWindow.Width=width;
+                        await Task.Delay(150);
+                        var scrollable=await exportedView.ExecuteScriptAsync("!['hidden','clip'].includes(getComputedStyle(document.documentElement).overflowY) && document.scrollingElement.scrollHeight > innerHeight");
+                        Check($"HTML export {mode} scrollable at {width}px",scrollable=="true");
+                        await exportedView.ExecuteScriptAsync("scrollTo(0,document.scrollingElement.scrollHeight)");
+                        await Task.Delay(100);
+                        var bottom=await exportedView.ExecuteScriptAsync("(()=>{const r=document.querySelector('main > :last-child').getBoundingClientRect();return scrollY>0 && r.top>=0 && r.bottom<=innerHeight})()");
+                        Check($"HTML export {mode} final paragraph visible at {width}px",bottom=="true");
+                    }
+                    // Export must scroll without any application layout attributes.
+                    var standalone=await exportedView.ExecuteScriptAsync("!document.documentElement.hasAttribute('data-layout') && getComputedStyle(document.documentElement).overflowY === 'auto'");
+                    Check($"HTML export {mode} scrolls without application state",standalone=="true");
+                } finally { exportedWindow.Close(); }
+            }
             using var printFixture = new StreamReader(typeof(MainWindow).Assembly.GetManifestResourceStream("Tests/print.md")!);
             var printPath = Path.Combine(fixtureDir,"Print.md");
             await File.WriteAllTextAsync(printPath,await printFixture.ReadToEndAsync());
@@ -437,3 +475,4 @@ public partial class MainWindow
     }
 
 }
+

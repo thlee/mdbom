@@ -4,22 +4,22 @@
 
 A lightweight way to read Markdown.
 
-**Current beta: 1.0.0-beta.4 (1.0 Beta 4).** MDBom is a read-only Markdown viewer for macOS and Windows. Both apps share a renderer, document styles, and toolbar, with native window and file handling on each platform. Bundled assets enable offline rendering without Electron or a separate server.
+**macOS stable: 1.0.0 · Windows published installer: 1.0.0-beta.4.** MDBom is a read-only Markdown viewer for macOS and Windows. Both apps share a renderer, document styles, and toolbar, with native window and file handling on each platform. Bundled assets enable offline rendering without Electron or a separate server.
 
 This is a personal open-source project, not an official application of the Rural Development Administration of Korea.
 
 ## Install and update
 
-[**Download 1.0 Beta 4**](https://github.com/thlee/mdbom/releases/tag/v1.0.0-beta.4) · [**User guide (Korean)**](HELP.md)
+[**Download macOS 1.0**](https://github.com/thlee/mdbom/releases/tag/v1.0.0) · [**User guide (Korean)**](HELP.md)
 
 | Platform | Installer | Installation |
 | --- | --- | --- |
-| Windows 10 22H2 / 11 x64 | [Setup EXE](https://github.com/thlee/mdbom/releases/download/v1.0.0-beta.4/MDBom-1.0.0-beta.4-Setup-x64.exe) | Run the downloaded installer |
-| macOS 14 or later · Apple Silicon | [DMG](https://github.com/thlee/mdbom/releases/download/v1.0.0-beta.4/MDBom-1.0.0-beta.4-macOS-arm64.dmg) | Drag the app to Applications |
+| Windows 10 22H2 / 11 x64 | [Beta 4 Setup EXE](https://github.com/thlee/mdbom/releases/download/v1.0.0-beta.4/MDBom-1.0.0-beta.4-Setup-x64.exe) | Run the downloaded installer |
+| macOS 14 or later · Apple Silicon | [DMG](https://github.com/thlee/mdbom/releases/download/v1.0.0/MDBom-1.0.0-macOS-arm64.dmg) | Drag the app to Applications |
 
 SHA-256 checksum files accompany the installers. The app includes a Markdown user guide, accessible through the **Help (?)** toolbar button. Public release downloads do not require a GitHub login.
 
-Development builds are available from successful [GitHub Actions](https://github.com/thlee/mdbom/actions/workflows/build.yml) runs. Artifacts include `MDBom-Windows-Setup-x64`, `MDBom-macOS-arm64`, and the portable `MDBom-win-x64` folder. Releases are published from selected, verified builds rather than automatically.
+GitHub Actions is disabled. Releases use locally built and verified packages. The 1.0 release currently includes macOS packages only; Windows 1.0 binaries await a Windows build and verification. The linked Windows Beta 4 installer does not include HTML export.
 
 - **Windows:** Installs for the current user and includes the .NET runtime. If WebView2 Runtime is missing, setup displays instructions and stops. Run a newer installer to update while preserving the installation location and preferences. Uninstall through Windows **Installed apps**.
 - **Mac:** Quit the running app, then replace it in Applications. Preferences are preserved.
@@ -41,13 +41,21 @@ This English README documents the existing app; it does not change the language 
 - Print the formatted document or save it as PDF
 - Leading YAML metadata shown in a collapsed **Document information** section
 
-MDBom has no editing or saving features, and task-list checkboxes cannot be changed. Source view supports selecting and copying the original text. Switching between source and document views keeps the same paragraph or code line near the top where possible. Hidden syntax and the end of a document map to the nearest available display position.
+MDBom never edits or saves changes to the original Markdown file, and task-list checkboxes cannot be changed. PDF output and HTML export create separate copies. Source view supports selecting and copying the original text. Switching between source and document views keeps the same paragraph or code line near the top where possible. Hidden syntax and the end of a document map to the nearest available display position.
 
 ## Printing and PDF
 
 Open a document and choose **Print / PDF** in the toolbar, or press **⌘P on Mac / Ctrl+P on Windows**. On Mac, **File → Print…** also works. Choose paper size, orientation, and page range in the print dialog. Use **PDF → Save as PDF** on Mac or the **Save as PDF** destination in the Windows preview.
 
 Only the **formatted document** is printed, even in source-only or split views. The toolbar, search controls, and source pane are excluded. Printing uses a light background and fits the paper width independently of the on-screen width setting. Long code lines and table cells wrap; landscape paper can help with very wide tables. The app opens the print dialog, and you choose whether to print or save.
+
+## HTML export (1.0)
+
+Choose **HTML로 내보내기 (Export HTML)** immediately to the left of **Print / PDF** in the toolbar, or **File → Export HTML…** on Mac, then choose a name and location for the `.html` file. Canceling the save dialog creates no file. The formatted document is exported from any view, without the app toolbar or source pane. Available in macOS 1.0 and the current Windows source. The published Windows Beta 4 installer does not include this feature.
+
+The single HTML file includes styles, local images, SVG, math, and Mermaid diagrams, and preserves the current theme, document width, and font settings. It opens offline in a modern browser without MDBom or JavaScript. Math uses native MathML; system fonts may differ between computers. Expandable metadata and diagram source remain interactive using standard HTML.
+
+Web/email and in-document links are retained. Links to other local Markdown files are disabled because those documents are not exported. Remote images are not downloaded. Missing or inaccessible images stop the export with an error. Local images are limited to 20 MiB each and 100 MiB total. The Markdown source remains unchanged. The export is a snapshot: later source edits do not update it, and app search/view controls are not included.
 
 ## Automatic refresh
 
@@ -67,7 +75,7 @@ The **Width** and **Font** toolbar buttons open separate panels. Click the same 
 
 ## Views and toolbar
 
-Both apps use the **same floating toolbar**. It is pinned by default and groups file actions, view buttons, display settings, and the pin control. Selected view and scroll-link states are visible. The filename appears in the window title.
+Both apps use the **same floating toolbar**. In 1.0, file actions appear in this order: **Open → Refresh → Export HTML → Print / PDF → Search**. It is pinned by default and groups file actions, view buttons, display settings, and the pin control. Selected view and scroll-link states are visible. The filename appears in the window title.
 
 - **Document / Source / Side-by-side / Stacked:** Source remains read-only and supports copying and searching. It appears on the left in side-by-side mode and above the document in stacked mode.
 - **Split ratio:** Drag the divider, or focus it and use the arrow keys. Home restores 50:50. The supported range is 20–80%.
@@ -118,7 +126,7 @@ The app source is MIT licensed. Bundled libraries retain their own licenses, inc
 
 ## Version policy
 
-The first public release was **1.0 Beta 3 (`1.0.0-beta.3`)**. The current version is Beta 4. Subsequent betas increment the beta number, followed by the stable `1.0.0` release. App identifiers and preference locations remain unchanged for compatibility.
+The first public release was **1.0 Beta 3 (`1.0.0-beta.3`)**. Stable macOS 1.0 is now available. Windows installers are published separately after native verification. App identifiers and preference locations remain unchanged for compatibility.
 
 ## Contributors
 
@@ -126,3 +134,4 @@ The first public release was **1.0 Beta 3 (`1.0.0-beta.3`)**. The current versio
 - **ChatGPT · OpenAI Codex (AI development assistant)** — Design discussions, implementation, fixes, testing, packaging, and documentation support
 
 MDBom is a personal open-source project developed through collaboration between its developer and an AI assistant.
+

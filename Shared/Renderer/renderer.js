@@ -1,3 +1,4 @@
+export { captureHTML, buildHTML } from './export.js';
 import MarkdownIt from 'markdown-it';
 import createDOMPurify from 'dompurify';
 const DOMPurify = createDOMPurify(window);
@@ -199,3 +200,4 @@ export function render(markdown, options = {}) {
 export function showSource(element, markdown) {
   element.textContent = markdown;
 }
+
