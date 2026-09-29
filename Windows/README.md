@@ -4,13 +4,13 @@
 
 마크다운 문서를 가볍게 보다.
 
-기존 Markdown Viewer의 새 이름입니다. 설정과 파일 연결 호환성을 위해 내부 실행 파일명·앱 식별자·설정 폴더는 유지합니다. 공개 소스는 `thlee/mdbom`에서 관리합니다. 이 문서는 현재 소스 기준이며 HTML 내보내기는 Beta 4 이후 개발 빌드에만 있습니다. 정식 1.0은 아직 출시하지 않았습니다.
+기존 Markdown Viewer의 새 이름입니다. 설정과 파일 연결 호환성을 위해 내부 실행 파일명·앱 식별자·설정 폴더는 유지합니다. 공개 소스는 `thlee/mdbom`에서 관리합니다. 이 문서는 현재 소스 기준이며 HTML 내보내기는 Beta 4 이후 개발 빌드에만 있습니다. Mac 1.0은 출시되었으며 Windows 1.0 설치 파일은 별도 빌드·검증 전입니다.
 
 Windows용 가벼운 **읽기 전용 Markdown 앱**입니다. C# / .NET 8 WPF + Microsoft Edge WebView2로 만들었습니다. Electron은 사용하지 않습니다. macOS 버전과 [같은 저장소](https://github.com/thlee/mdbom)의 `Shared/Renderer` 코어 및 본문 CSS를 사용합니다.
 
 ## Windows 설치 프로그램
 
-일반 사용자는 [공개 Releases](https://github.com/thlee/mdbom/releases)의 `MDBom-<버전>-Setup-x64.exe`를 내려받아 실행합니다. 개발 빌드는 성공한 GitHub Actions 실행의 **MDBom-Windows-Setup-x64** 아티팩트에서 받습니다. 워크플로는 PR, main push 및 수동 실행으로 빌드하도록 구성되어 있으며 Releases에는 검증한 빌드를 별도로 게시합니다.
+일반 사용자는 [공개 Releases](https://github.com/thlee/mdbom/releases)의 `MDBom-<버전>-Setup-x64.exe`를 내려받아 실행합니다. Actions는 비활성화 상태입니다. Windows에서 로컬 빌드·실행·설치 검증을 완료한 파일을 Releases에 별도로 게시합니다. 현재 공개 설치판은 베타 4입니다.
 
 - 현재 사용자에 설치되며 관리자 권한이 필요하지 않습니다.
 - 기존 ZIP 설치와 같은 `%LOCALAPPDATA%\Programs\MarkdownViewer` 위치를 사용합니다. 설정과 기본 앱 선택을 보존하며 새 설치 파일을 다시 실행하면 업데이트됩니다.

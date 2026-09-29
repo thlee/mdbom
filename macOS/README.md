@@ -1,6 +1,6 @@
-# 엠디봄 · MDBom — macOS 1.0 베타 4
+# 엠디봄 · MDBom — macOS 1.0
 
-[베타 설치 파일](https://github.com/thlee/mdbom/releases/tag/v1.0.0-beta.4) · [사용설명서](../HELP.md)
+[정식 설치 파일](https://github.com/thlee/mdbom/releases/tag/v1.0.0) · [사용설명서](../HELP.md)
 
 SwiftUI / AppKit + WKWebView로 만든 Apple Silicon용 읽기 전용 Markdown 앱입니다. Windows와 같은 렌더러·도구 패널을 사용합니다. [공통 사용법](../README.md), [개발 절차](../CONTRIBUTING.md), [검증 기록](../VERIFICATION.md)을 참고하세요.
 
@@ -18,7 +18,7 @@ SwiftUI / AppKit + WKWebView로 만든 Apple Silicon용 읽기 전용 Markdown �
 
 PR·main 업데이트 또는 Actions의 **Run workflow** 실행 시 앱 검증 후 DMG와 ZIP을 함께 생성하도록 구성되어 있습니다. 성공한 실행의 **MDBom-macOS-arm64** 아티팩트를 내려받으면 DMG와 SHA-256 파일이 들어 있습니다. 저장소는 공개이며 일반 사용자는 로그인 없이 [Releases의 설치 파일](https://github.com/thlee/mdbom/releases)을 받을 수 있습니다.
 
-개발 빌드는 Actions 아티팩트로 제공하며 검증한 빌드를 Releases에 별도로 게시합니다. 자동 릴리즈 게시·앱 자체 업데이트 다운로드는 구현하지 않았습니다. DMG 포장은 Developer ID 서명·공증을 대신하지 않습니다.
+Actions는 비활성화 상태이며 로컬에서 검증한 빌드를 Releases에 게시합니다. 자동 릴리즈 게시·앱 자체 업데이트 다운로드는 구현하지 않았습니다. DMG 포장은 Developer ID 서명·공증을 대신하지 않습니다.
 
 ### Finder 더블클릭 연결
 
@@ -30,9 +30,9 @@ PR·main 업데이트 또는 Actions의 **Run workflow** 실행 시 앱 검증 �
 
 Windows와 같은 도구바에서 문서·소스·좌우·상하 보기, 스크롤 연결, 폭·글꼴, 검색·테마·전체화면을 조절합니다. 읽기와 소스를 전환할 때 상단의 같은 원문 위치를 최대한 유지합니다. 외부 편집기의 저장은 자동 반영합니다. **⌘P** 또는 **File → Print…**로 본문을 인쇄하거나 PDF로 저장합니다.
 
-Beta 4 이후 개발 빌드에는 **인쇄 아이콘 바로 왼쪽의 HTML로 내보내기**와 **File → Export HTML…**가 추가됩니다. 저장 창에서 `.html` 파일의 이름과 위치를 선택하세요. 어느 보기에서든 현재 테마·문서 폭·글꼴로 본문만 저장하며 원본 Markdown은 변경하지 않습니다.
+1.0에는 **인쇄 아이콘 바로 왼쪽의 HTML로 내보내기**와 **File → Export HTML…**가 추가됩니다. 저장 창에서 `.html` 파일의 이름과 위치를 선택하세요. 어느 보기에서든 현재 테마·문서 폭·글꼴로 본문만 저장하며 원본 Markdown은 변경하지 않습니다.
 
-스타일·수식·Mermaid·로컬 이미지를 한 파일에 포함합니다. 최신 브라우저에서 오프라인으로 열 수 있고 시스템 글꼴에 따라 모양이 달라질 수 있습니다. 로컬 Markdown 링크는 비활성화하며 누락된 이미지는 오류로 안내합니다. 이미지 제한은 개별 20 MiB, 합계 100 MiB입니다. 자세한 설명은 [도움말](../HELP.md#html로-내보내기-개발-빌드)을 참고하세요. 공개 Beta 4에는 HTML 내보내기가 없으며 정식 1.0은 아직 출시하지 않았습니다.
+스타일·수식·Mermaid·로컬 이미지를 한 파일에 포함합니다. 최신 브라우저에서 오프라인으로 열 수 있고 시스템 글꼴에 따라 모양이 달라질 수 있습니다. 로컬 Markdown 링크는 비활성화하며 누락된 이미지는 오류로 안내합니다. 이미지 제한은 개별 20 MiB, 합계 100 MiB입니다. 자세한 설명은 [도움말](../HELP.md#html로-내보내기)을 참고하세요.
 
 ## 소스에서 빌드
 

@@ -22,6 +22,7 @@ final class IntegrationTest {
             try FileManager.default.createDirectory(at: fixtureDirectory, withIntermediateDirectories: true)
             let png = Data(base64Encoded: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+a2ioAAAAASUVORK5CYII=")!
             try png.write(to: fixtureDirectory.appendingPathComponent("local image.png"))
+            try png.write(to: fixtureDirectory.appendingPathComponent("로컬 그림.png"))
             try Self.svgFixture.write(to: fixtureDirectory.appendingPathComponent("rich.svg"), atomically: true, encoding: .utf8)
             let settings = ViewerSettings(defaults: UserDefaults(suiteName: settingsSuite)!)
             settings.theme = "light"
@@ -253,13 +254,28 @@ final class IntegrationTest {
             _ = try await web.evaluateJavaScript("viewer.configure({theme:'dark',layout:'horizontal'}); true")
             try await snapshot("rich-dark-split.png")
             _ = try await web.evaluateJavaScript(String(contentsOf: RendererAssets.scrollChecks.deletingLastPathComponent().appendingPathComponent("html-export.js"), encoding: .utf8) + "\ntrue;")
-            for mode in ["reading", "source", "horizontal", "vertical"] {
-                _ = try await web.callAsyncJavaScript("viewer.configure({view:mode==='source'?'source':'reading',layout:['reading','source'].includes(mode)?'single':mode}); return true", arguments: ["mode":mode], in: nil, contentWorld: .page)
-                let html = try await coordinator.createHTMLExport()
-                try html.write(to: reportURL.deletingLastPathComponent().appendingPathComponent("export-" + mode + ".html"), atomically: true, encoding: .utf8)
-                let exportChecks = try await web.callAsyncJavaScript("return checkHTMLExport(html)", arguments: ["html":html], in: nil, contentWorld: .page) as? [String: Bool] ?? ["report":false]
-                for (key,value) in exportChecks { checks["export_" + mode + "_" + key] = value }
+            for theme in ["light", "dark"] {
+                for mode in ["reading", "source", "horizontal", "vertical"] {
+                    _ = try await web.callAsyncJavaScript("""
+                        viewer.configure({view:mode==='source'?'source':'reading',layout:['reading','source'].includes(mode)?'single':mode,theme,reading:920,readingFont:'serif',readingFontSize:18});
+                        await viewer.render(richFixture+'\\n\\n![Unicode image](로컬%20그림.png)\\n\\n'+Array.from({length:70},(_,i)=>'Paragraph '+i+': exported document scrolling.').join('\\n\\n')+'\\n\\n## Final export marker','Export.md');
+                        return true;
+                        """, arguments: ["mode":mode,"theme":theme], in: nil, contentWorld: .page)
+                    let html = try await coordinator.createHTMLExport()
+                    let name = "export-" + theme + "-" + mode
+                    try html.write(to: reportURL.deletingLastPathComponent().appendingPathComponent(name + ".html"), atomically: true, encoding: .utf8)
+                    let exportChecks = try await web.callAsyncJavaScript("return checkHTMLExport(html)", arguments: ["html":html], in: nil, contentWorld: .page) as? [String: Bool] ?? ["report":false]
+                    for (key,value) in exportChecks { checks[name + "_" + key] = value }
+                    let standalone = try await inspectStandaloneExport(html, theme: theme, name: name)
+                    for (key,value) in standalone { checks[name + "_" + key] = value }
+                }
             }
+            let svgURL = reportURL.deletingLastPathComponent().appendingPathComponent("fixtures/rich.svg")
+            let originalSVG = try Data(contentsOf: svgURL)
+            try FileManager.default.removeItem(at: svgURL)
+            do { _ = try await coordinator.createHTMLExport(); checks["export_missingImageError"] = false }
+            catch { checks["export_missingImageError"] = true }
+            try originalSVG.write(to: svgURL)
             let printable = try String(contentsOf: RendererAssets.scrollChecks.deletingLastPathComponent().appendingPathComponent("print.md"), encoding: .utf8)
             for mode in ["reading", "source", "horizontal", "vertical"] {
                 _ = try await web.callAsyncJavaScript("""
@@ -288,6 +304,54 @@ final class IntegrationTest {
     }
 
     private static let svgFixture = ##"<svg xmlns="http://www.w3.org/2000/svg" width="240" height="80" onload="window.__mdbomRichAttack=true"><rect width="240" height="80" rx="12" fill="#dcefdc"/><text x="24" y="48" fill="#235633" font-size="22">Local SVG</text><script>window.__mdbomRichAttack=true</script></svg>"##
+
+    private func inspectStandaloneExport(_ html: String, theme: String, name: String) async throws -> [String: Bool] {
+        let browser = WKWebView(frame: NSRect(x: 0, y: 0, width: 1000, height: 700))
+        let preview = NSWindow(contentRect: browser.frame, styleMask: [.titled], backing: .buffered, defer: false)
+        preview.contentView = browser
+        preview.orderFrontRegardless()
+        defer { preview.orderOut(nil) }
+        browser.loadHTMLString(html, baseURL: nil)
+        var loaded = false
+        for _ in 0..<150 {
+            if !browser.isLoading, (try? await browser.evaluateJavaScript("document.readyState === 'complete' && !!document.querySelector('main math')")) as? Bool == true { loaded = true; break }
+            try await Task.sleep(nanoseconds: 20_000_000)
+        }
+        guard loaded else { return ["standaloneLoaded":false] }
+        let result = try await browser.callAsyncJavaScript("""
+            const images=[...document.images];
+            await Promise.all(images.map(i=>i.decode().catch(()=>{})));
+            const main=document.querySelector('main');
+            return {
+              imagesLoaded: images.length>=4 && images.every(i=>i.naturalWidth>0),
+              actualTheme: getComputedStyle(document.body).backgroundColor === (theme==='dark'?'rgb(13, 17, 23)':'rgb(255, 255, 255)'),
+              actualFont: getComputedStyle(main).fontSize==='18px',
+              actualWidth: Math.abs(main.getBoundingClientRect().width-920)<2,
+              noActiveContent: !window.__mdbomRichAttack && !document.querySelector('script,iframe'),
+              noExternalImages: images.every(i=>i.src.startsWith('data:'))
+            };
+            """, arguments: ["theme":theme], in: nil, contentWorld: .page) as? [String: Bool] ?? ["report":false]
+        var checks = result
+        if name.hasSuffix("reading") {
+           let image = try await browser.takeSnapshot(configuration: nil)
+           if let tiff=image.tiffRepresentation, let bitmap=NSBitmapImageRep(data:tiff),
+           let png=bitmap.representation(using:.png,properties:[:]) {
+            try png.write(to:reportURL.deletingLastPathComponent().appendingPathComponent(name+"-standalone.png"))
+           }
+        }
+        for width in [800,390] {
+            preview.setContentSize(NSSize(width: width, height: 700))
+            let scrolled = try await browser.callAsyncJavaScript("""
+                window.scrollTo(0,document.scrollingElement.scrollHeight);
+                await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
+                const final=[...document.querySelectorAll('h2')].find(h=>h.textContent==='Final export marker');
+                const box=final.getBoundingClientRect();
+                return scrollY>0 && box.top>=0 && box.bottom<=innerHeight && document.scrollingElement.scrollWidth<=innerWidth+1;
+                """, arguments: [:], in: nil, contentWorld: .page) as? Bool == true
+            checks["scrollToEnd_"+String(width)] = scrolled
+        }
+        return checks
+    }
 
     private func applyWidth(_ width: ReadingWidth) async throws {
         coordinator.model.readingWidth = width

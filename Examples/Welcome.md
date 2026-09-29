@@ -58,7 +58,7 @@ Use the width and font panels to adjust the document and source separately. **‚å
 
 ## Share a rendered copy
 
-Use **Print / PDF** to print the formatted document or save a PDF. Development builds after Beta 4 also provide **Export HTML**, immediately left of Print. It saves a single file containing styles and local images, with the current document theme, width, and font. The original Markdown stays unchanged. HTML export is not included in the published Beta 4 installers.
+Use **Print / PDF** to print the formatted document or save a PDF. Version 1.0 also provides **Export HTML**, immediately left of Print. It saves a single file containing styles and local images, with the current document theme, width, and font. The original Markdown stays unchanged. HTML export is included in macOS 1.0. The published Windows Beta 4 installer does not include it.
 
 Read **bold text**, *emphasis*, ~~strikethrough~~, and `inline code`.
 

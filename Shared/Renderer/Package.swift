@@ -7,7 +7,7 @@ let package = Package(
     products: [.library(name: "RendererAssets", targets: ["RendererAssets"])],
     targets: [
         .target(name: "RendererAssets", path: ".",
-                exclude: ["renderer.js", "position.js", "workspace.js", "search.js", "rich-content.js"],
+                exclude: ["renderer.js", "position.js", "workspace.js", "search.js", "rich-content.js", "export.js", "export.css"],
                 resources: [.copy("Resources/Web"), .copy("Resources/Tests")])
     ]
 )
