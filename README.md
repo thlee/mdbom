@@ -4,22 +4,22 @@
 
 A lightweight way to read Markdown.
 
-**macOS stable: 1.0.0 · Windows published installer: 1.0.0-beta.4.** MDBom is a read-only Markdown viewer for macOS and Windows. Both apps share a renderer, document styles, and toolbar, with native window and file handling on each platform. Bundled assets enable offline rendering without Electron or a separate server.
+**macOS and Windows stable: 1.0.0.** MDBom is a read-only Markdown viewer for macOS and Windows. Both apps share a renderer, document styles, and toolbar, with native window and file handling on each platform. Bundled assets enable offline rendering without Electron or a separate server.
 
 This is a personal open-source project, not an official application of the Rural Development Administration of Korea.
 
 ## Install and update
 
-[**Download macOS 1.0**](https://github.com/thlee/mdbom/releases/tag/v1.0.0) · [**User guide (Korean)**](HELP.md)
+[**Download 1.0**](https://github.com/thlee/mdbom/releases/tag/v1.0.0) · [**User guide (Korean)**](HELP.md)
 
 | Platform | Installer | Installation |
 | --- | --- | --- |
-| Windows 10 22H2 / 11 x64 | [Beta 4 Setup EXE](https://github.com/thlee/mdbom/releases/download/v1.0.0-beta.4/MDBom-1.0.0-beta.4-Setup-x64.exe) | Run the downloaded installer |
+| Windows 10 22H2 / 11 x64 | [1.0 Setup EXE](https://github.com/thlee/mdbom/releases/download/v1.0.0/MDBom-1.0.0-Setup-x64.exe) | Run the downloaded installer |
 | macOS 14 or later · Apple Silicon | [DMG](https://github.com/thlee/mdbom/releases/download/v1.0.0/MDBom-1.0.0-macOS-arm64.dmg) | Drag the app to Applications |
 
 SHA-256 checksum files accompany the installers. The app includes a Markdown user guide, accessible through the **Help (?)** toolbar button. Public release downloads do not require a GitHub login.
 
-GitHub Actions is disabled. Releases use locally built and verified packages. The 1.0 release currently includes macOS packages only; Windows 1.0 binaries await a Windows build and verification. The linked Windows Beta 4 installer does not include HTML export.
+GitHub Actions is disabled. Releases use locally built and verified packages. The 1.0 release includes macOS packages and Windows x64 Setup/portable ZIP, with HTML export on both platforms.
 
 - **Windows:** Installs for the current user and includes the .NET runtime. If WebView2 Runtime is missing, setup displays instructions and stops. Run a newer installer to update while preserving the installation location and preferences. Uninstall through Windows **Installed apps**.
 - **Mac:** Quit the running app, then replace it in Applications. Preferences are preserved.
@@ -51,7 +51,7 @@ Only the **formatted document** is printed, even in source-only or split views. 
 
 ## HTML export (1.0)
 
-Choose **HTML로 내보내기 (Export HTML)** immediately to the left of **Print / PDF** in the toolbar, or **File → Export HTML…** on Mac, then choose a name and location for the `.html` file. Canceling the save dialog creates no file. The formatted document is exported from any view, without the app toolbar or source pane. Available in macOS 1.0 and the current Windows source. The published Windows Beta 4 installer does not include this feature.
+Choose **HTML로 내보내기 (Export HTML)** immediately to the left of **Print / PDF** in the toolbar, or **File → Export HTML…** on Mac, then choose a name and location for the `.html` file. Canceling the save dialog creates no file. The formatted document is exported from any view, without the app toolbar or source pane. Available in macOS and Windows 1.0.
 
 The single HTML file includes styles, local images, SVG, math, and Mermaid diagrams, and preserves the current theme, document width, and font settings. It opens offline in a modern browser without MDBom or JavaScript. Math uses native MathML; system fonts may differ between computers. Expandable metadata and diagram source remain interactive using standard HTML.
 
