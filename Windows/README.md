@@ -1,16 +1,16 @@
-# 엠디봄 · MDBom — Windows 1.0 베타 4
+# 엠디봄 · MDBom — Windows 1.0
 
-[베타 설치 파일](https://github.com/thlee/mdbom/releases/tag/v1.0.0-beta.4) · [사용설명서](../HELP.md)
+[1.0 설치 파일](https://github.com/thlee/mdbom/releases/tag/v1.0.0) · [사용설명서](../HELP.md)
 
 마크다운 문서를 가볍게 보다.
 
-기존 Markdown Viewer의 새 이름입니다. 설정과 파일 연결 호환성을 위해 내부 실행 파일명·앱 식별자·설정 폴더는 유지합니다. 공개 소스는 `thlee/mdbom`에서 관리합니다. 이 문서는 현재 소스 기준이며 HTML 내보내기는 Beta 4 이후 개발 빌드에만 있습니다. Mac 1.0은 출시되었으며 Windows 1.0 설치 파일은 별도 빌드·검증 전입니다.
+기존 Markdown Viewer의 새 이름입니다. 설정과 파일 연결 호환성을 위해 내부 실행 파일명·앱 식별자·설정 폴더는 유지합니다. 공개 소스는 `thlee/mdbom`에서 관리합니다. Windows 1.0은 Mac과 같은 v1.0.0 태그에서 빌드했으며 HTML 내보내기를 포함합니다.
 
 Windows용 가벼운 **읽기 전용 Markdown 앱**입니다. C# / .NET 8 WPF + Microsoft Edge WebView2로 만들었습니다. Electron은 사용하지 않습니다. macOS 버전과 [같은 저장소](https://github.com/thlee/mdbom)의 `Shared/Renderer` 코어 및 본문 CSS를 사용합니다.
 
 ## Windows 설치 프로그램
 
-일반 사용자는 [공개 Releases](https://github.com/thlee/mdbom/releases)의 `MDBom-<버전>-Setup-x64.exe`를 내려받아 실행합니다. Actions는 비활성화 상태입니다. Windows에서 로컬 빌드·실행·설치 검증을 완료한 파일을 Releases에 별도로 게시합니다. 현재 공개 설치판은 베타 4입니다.
+일반 사용자는 [공개 Releases](https://github.com/thlee/mdbom/releases)의 `MDBom-<버전>-Setup-x64.exe`를 내려받아 실행합니다. Actions는 비활성화 상태입니다. Windows에서 로컬 빌드·실행·설치 검증을 완료한 파일을 Releases에 별도로 게시합니다. 현재 공개 설치판은 1.0입니다.
 
 - 현재 사용자에 설치되며 관리자 권한이 필요하지 않습니다.
 - 기존 ZIP 설치와 같은 `%LOCALAPPDATA%\Programs\MarkdownViewer` 위치를 사용합니다. 설정과 기본 앱 선택을 보존하며 새 설치 파일을 다시 실행하면 업데이트됩니다.
@@ -111,9 +111,9 @@ Mac과 Windows 모두 공통 떠 있는 도구 패널을 사용합니다. 파일
 
 도구 패널의 **인쇄 · PDF** 또는 **Ctrl+P**로 WebView2 인쇄 미리보기를 엽니다. 소스·분할 보기에서도 서식이 적용된 본문만 밝은 배경과 종이 폭으로 출력합니다. 미리보기에서 프린터 또는 **PDF로 저장**을 선택합니다.
 
-## HTML 내보내기 (개발 빌드)
+## HTML 내보내기
 
-공통 도구바의 **인쇄 아이콘 바로 왼쪽에 있는 HTML로 내보내기**를 누르고 저장 창에서 `.html` 파일의 이름과 위치를 선택합니다. 도구 순서는 **열기 → 새로고침 → HTML로 내보내기 → 인쇄 · PDF → 검색**입니다. 공개 Beta 4에는 아직 이 기능이 없습니다.
+공통 도구바의 **인쇄 아이콘 바로 왼쪽에 있는 HTML로 내보내기**를 누르고 저장 창에서 `.html` 파일의 이름과 위치를 선택합니다. 도구 순서는 **열기 → 새로고침 → HTML로 내보내기 → 인쇄 · PDF → 검색**입니다. Windows 1.0에 포함된 기능입니다.
 
 현재 테마·문서 폭·글꼴과 서식이 적용된 본문을 저장합니다. 소스·분할 보기에서도 본문만 내보내며 앱 도구바는 제외합니다. 스타일·수식·Mermaid·로컬 이미지를 한 파일에 포함하므로 최신 브라우저에서 오프라인으로 열 수 있습니다. 원본 Markdown은 변경하지 않습니다.
 
