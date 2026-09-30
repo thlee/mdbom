@@ -1,9 +1,13 @@
 name: Build and verify desktop apps
 on:
-  push:
-    branches: [main]
-  pull_request:
   workflow_dispatch:
+    inputs:
+      platform:
+        description: Platform to build for a release
+        required: true
+        default: all
+        type: choice
+        options: [all, windows, macos]
 concurrency:
   group: desktop-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
@@ -23,6 +27,7 @@ jobs:
       - run: node Scripts/check-assets.mjs
       - run: git diff --exit-code -- Shared/Renderer/Resources macOS/Sources/MarkdownViewer/Resources/Web ThirdPartyLicenses
   macos:
+    if: inputs.platform != 'windows'
     runs-on: macos-14
     timeout-minutes: 5
     steps:
@@ -33,6 +38,7 @@ jobs:
       - run: ditto -c -k --sequesterRsrc --keepParent "dist/엠디봄.app" dist/MDBom-macOS-arm64.zip
       - uses: actions/upload-artifact@v4
         with:
+          retention-days: 3
           name: MDBom-macOS-arm64
           path: |
             dist/MDBom-macOS-arm64.zip
@@ -42,9 +48,12 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
+          retention-days: 3
           name: macOS-verification
           path: .build/verification
   windows:
+    if: inputs.platform != 'macos'
+    timeout-minutes: 20
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
@@ -66,10 +75,12 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
+          retention-days: 3
           name: Windows-verification
           path: dist/windows-verification
       - uses: actions/upload-artifact@v4
         with:
+          retention-days: 3
           name: MDBom-win-x64
           path: dist/MDBom-win-x64
 
@@ -81,6 +92,7 @@ jobs:
         run: ./Windows/scripts/Test-Installer.ps1 -Installer (Get-ChildItem dist/installer/*-Setup-x64.exe).FullName
       - uses: actions/upload-artifact@v4
         with:
+          retention-days: 3
           name: MDBom-Windows-Setup-x64
           path: dist/installer/*
           if-no-files-found: error
