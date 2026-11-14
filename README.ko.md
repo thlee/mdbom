@@ -16,12 +16,14 @@
 
 | 운영체제 | 설치 파일 | 설치 방법 |
 | --- | --- | --- |
-| Windows 10 22H2 / 11 x64 | [1.0 설치 EXE](https://github.com/thlee/mdbom/releases/download/v1.0.0/MDBom-1.0.0-Setup-x64-r2.exe) | 내려받은 파일 실행 |
+| Windows 10 22H2 / 11 x64 | [1.0 설치 EXE (R2)](https://github.com/thlee/mdbom/releases/download/v1.0.0/MDBom-1.0.0-Setup-x64-r2.exe) | 내려받은 파일 실행 |
 | macOS 14 이상 · Apple Silicon | [설치 DMG](https://github.com/thlee/mdbom/releases/download/v1.0.0/MDBom-1.0.0-macOS-arm64.dmg) | 앱을 Applications로 이동 |
+
+기본 다운로드는 GitHub이며, [정부 GitLab](https://gitlab.aigov.go.kr/thlee0/mdbom/-/releases/v1.0.0)은 보조 배포처입니다. 정부 GitLab은 현재 점검 중이며 Windows R2는 아직 반영되지 않았습니다. 이용하는 배포처의 버전과 체크섬을 확인하세요.
 
 두 설치 파일에는 SHA-256 확인 파일과 `HELP.md`를 제공합니다. 앱 도구바의 **도움말(?)** 버튼으로도 설명서를 볼 수 있습니다. 공개 릴리스의 설치 파일은 로그인 없이 내려받을 수 있습니다.
 
-GitHub Actions는 비활성화 상태이며 로컬에서 빌드·검증한 설치 파일을 게시합니다. 1.0 릴리스에 Mac 배포본과 Windows x64 설치 EXE·포터블 ZIP을 제공합니다. 양쪽 모두 HTML 내보내기를 포함합니다.
+GitHub Actions는 기본적으로 비활성화합니다. Windows R2는 일회성으로 허용된 Actions에서 빌드·검증했으며, 이후 다시 비활성화했습니다. 1.0 릴리스에 Mac 배포본과 Windows x64 설치 EXE·포터블 ZIP을 제공합니다. 양쪽 모두 HTML 내보내기를 포함합니다.
 
 - **Windows:** 현재 사용자에 설치하며 .NET 런타임이 포함됩니다. R2 설치본은 WebView2가 없으면 Microsoft 공식 파일을 내려받아 서명을 확인하고 자동 설치합니다. 없는 런타임을 준비할 때만 인터넷이 필요합니다. ZIP과 기존 1.0 설치본은 별도 런타임 설치가 필요합니다. 새 설치 EXE를 실행하면 기존 설치 위치와 설정을 유지해 업데이트합니다. 제거는 Windows ‘설치된 앱’에서 할 수 있습니다.
 - **Mac:** 실행 중인 앱을 종료하고 Applications의 앱을 교체합니다. 기존 설정은 유지됩니다.
