@@ -1,5 +1,5 @@
 [CmdletBinding()]
-param([Parameter(Mandatory)][string]$Installer)
+param([Parameter(Mandatory)][string]$Installer, [switch]$VerifyRuntimeInstall, [string]$ReportDirectory)
 $ErrorActionPreference = 'Stop'
 $Installer = (Resolve-Path -LiteralPath $Installer).Path
 $install = Join-Path $env:LOCALAPPDATA 'Programs\MarkdownViewer'
@@ -7,9 +7,17 @@ $preferences = Join-Path $env:LOCALAPPDATA 'MarkdownViewer'
 # This destructive lifecycle test is intended only for a disposable CI account.
 if ((Test-Path $install) -or (Test-Path $preferences)) { throw 'Use a clean, disposable account for installer lifecycle testing.' }
 function Run-Setup([string]$Path) {
-    $p = Start-Process -FilePath $Path -ArgumentList '/VERYSILENT /SUPPRESSMSGBOXES /NORESTART' -PassThru -WindowStyle Hidden
-    if (-not $p.WaitForExit(120000)) { throw 'Setup timed out.' }
-    if ($p.ExitCode -ne 0) { throw "Setup failed: $($p.ExitCode)" }
+    $arguments = '/VERYSILENT /SUPPRESSMSGBOXES /NORESTART'
+    if ($ReportDirectory) {
+        $log = Join-Path $ReportDirectory ('setup-' + [guid]::NewGuid().ToString('N') + '.log')
+        $arguments += ' /LOG="' + $log + '"'
+    }
+    $p = Start-Process -FilePath $Path -ArgumentList $arguments -PassThru -WindowStyle Hidden
+    if (-not $p.WaitForExit(420000)) { throw 'Setup timed out.' }
+    if ($p.ExitCode -ne 0) {
+        if ($ReportDirectory -and (Test-Path -LiteralPath $log)) { Get-Content -LiteralPath $log -Tail 45 | Write-Output }
+        throw "Setup failed: $($p.ExitCode)"
+    }
 }
 function Assert-Installed {
     if (-not (Test-Path "$install\HELP.md")) { throw 'Bundled Markdown help missing.' }
@@ -31,6 +39,10 @@ function Assert-Installed {
 }
 Run-Setup $Installer
 Assert-Installed
+if ($VerifyRuntimeInstall) {
+    $app = Start-Process -FilePath (Join-Path $install 'MarkdownViewer.exe') -ArgumentList ('--smoke-test "' + (Join-Path $ReportDirectory 'installed-app') + '"') -WindowStyle Hidden -PassThru
+    if (-not $app.WaitForExit(180000) -or $app.ExitCode -ne 0) { throw 'Installed app failed WebView2 smoke tests' }
+}
 New-Item -ItemType Directory -Path $preferences -Force | Out-Null
 $sentinel = Join-Path $preferences 'installer-preservation-test.txt'
 Set-Content $sentinel 'preserve settings and profile'

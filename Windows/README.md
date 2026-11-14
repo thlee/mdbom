@@ -10,13 +10,23 @@ Windows용 가벼운 **읽기 전용 Markdown 앱**입니다. C# / .NET 8 WPF + 
 
 ## Windows 설치 프로그램
 
+### R2 설치 프로그램: WebView2 자동 설치
+
+개선된 설치 EXE는 WebView2가 이미 있으면 그대로 사용하고, 없으면 Microsoft 공식 Bootstrapper를 내려받아 전자서명을 확인한 뒤 자동 설치합니다. Microsoft 설치가 완료되고 런타임 등록이 확인되어야 엠디봄 설치를 계속합니다. 검증된 R2 정식 설치본은 [GitHub에서 다운로드](https://github.com/thlee/mdbom/releases/download/v1.0.0/MDBom-1.0.0-Setup-x64-r2.exe)합니다. 정부 GitLab은 점검 중이므로 아직 반영하지 못했습니다. 기존 1.0 설치 파일은 그대로 유지되며 자동 설치 기능이 없습니다.
+
+런타임이 없는 PC는 처음 설치할 때 인터넷 연결이 필요합니다. 다운로드·서명 검증·설치 실패 시 오류 안내 후 중단하므로 연결이나 조직 정책을 확인하고 다시 시도하세요. 재부팅이 필요하면 안내를 따르세요. 오프라인 PC에서는 Microsoft Evergreen Standalone Installer x64를 별도로 준비해 먼저 설치합니다. ZIP 및 Install.ps1은 런타임 자동 설치 대상이 아닙니다. .NET은 계속 자체 포함합니다.
+
+개발자는 `Windows/scripts/Test-WebView2Setup.ps1`로 자동 설치 흐름과 서명 정책의 격리 검사를 실행할 수 있습니다. 2026-11-14 일회용 Windows 환경에서 실제 런타임 미설치 상태, 오프라인 실패, 연결 복구 후 자동 설치와 앱 실행·재설치·제거를 검증했습니다.
+
+### 공통 설치 안내
+
 일반 사용자는 [공개 Releases](https://github.com/thlee/mdbom/releases)의 `MDBom-<버전>-Setup-x64.exe`를 내려받아 실행합니다. Actions는 비활성화 상태입니다. Windows에서 로컬 빌드·실행·설치 검증을 완료한 파일을 Releases에 별도로 게시합니다. 현재 공개 설치판은 1.0입니다.
 
 - 현재 사용자에 설치되며 관리자 권한이 필요하지 않습니다.
 - 기존 ZIP 설치와 같은 `%LOCALAPPDATA%\Programs\MarkdownViewer` 위치를 사용합니다. 설정과 기본 앱 선택을 보존하며 새 설치 파일을 다시 실행하면 업데이트됩니다.
 - 시작 메뉴와 연결 프로그램에 엠디봄이 등록됩니다. 기본 앱으로 지정하려면 Windows의 ‘연결 프로그램 → 다른 앱 선택 → 항상’을 사용하세요.
 - 제거: Windows 설정 → 앱 → 설치된 앱 → 엠디봄. 문서와 사용자 설정은 보존됩니다.
-- WebView2 Runtime이 없으면 설치 전에 안내하고 중단합니다. [Microsoft 공식 다운로드](https://developer.microsoft.com/microsoft-edge/webview2)에서 Evergreen Runtime을 설치한 뒤 다시 실행하세요. WebView2가 있으면 앱 설치와 실행 모두 오프라인으로 가능합니다.
+- 기존 1.0 설치본은 WebView2 Runtime이 없으면 설치 전에 안내하고 중단합니다. R2는 자동 설치를 시도합니다. [Microsoft 공식 다운로드](https://developer.microsoft.com/microsoft-edge/webview2)에서 Evergreen Runtime을 설치한 뒤 다시 실행하세요. WebView2가 있으면 앱 설치와 실행 모두 오프라인으로 가능합니다.
 - 설치 EXE는 현재 코드 서명되지 않았으므로 배포 시 SmartScreen 경고가 표시될 수 있습니다.
 
 개발자는 Inno Setup 6.3 이상을 설치한 뒤 저장소 루트에서 실행합니다. 컴파일러가 다른 위치에 있으면 `-CompilerPath <ISCC.exe 경로>`를 전달하세요.

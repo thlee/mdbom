@@ -16,14 +16,14 @@ This is a personal open-source project, not an official application of the Rural
 
 | Platform | Installer | Installation |
 | --- | --- | --- |
-| Windows 10 22H2 / 11 x64 | [1.0 Setup EXE](https://github.com/thlee/mdbom/releases/download/v1.0.0/MDBom-1.0.0-Setup-x64.exe) | Run the downloaded installer |
+| Windows 10 22H2 / 11 x64 | [1.0 Setup EXE](https://github.com/thlee/mdbom/releases/download/v1.0.0/MDBom-1.0.0-Setup-x64-r2.exe) | Run the downloaded installer |
 | macOS 14 or later · Apple Silicon | [DMG](https://github.com/thlee/mdbom/releases/download/v1.0.0/MDBom-1.0.0-macOS-arm64.dmg) | Drag the app to Applications |
 
 SHA-256 checksum files accompany the installers. The app includes a Markdown user guide, accessible through the **Help (?)** toolbar button. Public release downloads do not require a GitHub login.
 
 GitHub Actions is disabled. Releases use locally built and verified packages. The 1.0 release includes macOS packages and Windows x64 Setup/portable ZIP, with HTML export on both platforms.
 
-- **Windows:** Installs for the current user and includes the .NET runtime. If WebView2 Runtime is missing, setup displays instructions and stops. Run a newer installer to update while preserving the installation location and preferences. Uninstall through Windows **Installed apps**.
+- **Windows:** Installs for the current user and includes the .NET runtime. The R2 installer downloads and installs Microsoft WebView2 Runtime when missing, after verifying its Microsoft signature. Internet access is required only when installing the missing runtime. ZIP packages and the original 1.0 installer still require a separately installed runtime. Run a newer installer to update while preserving the installation location and preferences. Uninstall through Windows **Installed apps**.
 - **Mac:** Quit the running app, then replace it in Applications. Preferences are preserved.
 - Neither platform overrides your default app choice. See the platform guides for double-click file associations.
 - Windows installers are unsigned. The Mac app uses ad-hoc signing and is not Developer ID notarized.
