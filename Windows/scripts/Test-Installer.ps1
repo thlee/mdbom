@@ -7,9 +7,17 @@ $preferences = Join-Path $env:LOCALAPPDATA 'MarkdownViewer'
 # This destructive lifecycle test is intended only for a disposable CI account.
 if ((Test-Path $install) -or (Test-Path $preferences)) { throw 'Use a clean, disposable account for installer lifecycle testing.' }
 function Run-Setup([string]$Path) {
-    $p = Start-Process -FilePath $Path -ArgumentList '/VERYSILENT /SUPPRESSMSGBOXES /NORESTART' -PassThru -WindowStyle Hidden
+    $arguments = '/VERYSILENT /SUPPRESSMSGBOXES /NORESTART'
+    if ($ReportDirectory) {
+        $log = Join-Path $ReportDirectory ('setup-' + [guid]::NewGuid().ToString('N') + '.log')
+        $arguments += ' /LOG="' + $log + '"'
+    }
+    $p = Start-Process -FilePath $Path -ArgumentList $arguments -PassThru -WindowStyle Hidden
     if (-not $p.WaitForExit(420000)) { throw 'Setup timed out.' }
-    if ($p.ExitCode -ne 0) { throw "Setup failed: $($p.ExitCode)" }
+    if ($p.ExitCode -ne 0) {
+        if ($ReportDirectory -and (Test-Path -LiteralPath $log)) { Get-Content -LiteralPath $log -Tail 45 | Write-Output }
+        throw "Setup failed: $($p.ExitCode)"
+    }
 }
 function Assert-Installed {
     if (-not (Test-Path "$install\HELP.md")) { throw 'Bundled Markdown help missing.' }

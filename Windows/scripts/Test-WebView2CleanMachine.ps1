@@ -49,6 +49,8 @@ try {
     if ((Get-Content -LiteralPath $log -Raw) -notmatch 'WebView2 setup') { throw 'Prerequisite failure was not logged' }
     Write-Output "Offline failure handled, exit $($p.ExitCode)."
 } finally { foreach ($name in $rules) { Remove-NetFirewallRule -Name $name } }
+# Allow the filtering platform to observe rule removal before retrying.
+Start-Sleep -Seconds 10
 Assert-NoRuntime
 # Real network, real Microsoft bootstrapper, actual installation and lifecycle checks.
 & (Join-Path $PSScriptRoot 'Test-Installer.ps1') -Installer $Installer -VerifyRuntimeInstall -ReportDirectory $report
