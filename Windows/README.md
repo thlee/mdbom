@@ -10,6 +10,16 @@ Windows용 가벼운 **읽기 전용 Markdown 앱**입니다. C# / .NET 8 WPF + 
 
 ## Windows 설치 프로그램
 
+### 다음 설치 빌드: WebView2 자동 설치
+
+개선된 설치 EXE는 WebView2가 이미 있으면 그대로 사용하고, 없으면 Microsoft 공식 Bootstrapper를 내려받아 전자서명을 확인한 뒤 자동 설치합니다. Microsoft 설치가 완료되고 런타임 등록이 확인되어야 엠디봄 설치를 계속합니다. 이 변경은 현재 개발 소스에 있으며 기존 GitLab/GitHub 1.0 설치 파일에는 아직 적용되지 않았습니다.
+
+런타임이 없는 PC는 처음 설치할 때 인터넷 연결이 필요합니다. 다운로드·서명 검증·설치 실패 시 오류 안내 후 중단하므로 연결이나 조직 정책을 확인하고 다시 시도하세요. 재부팅이 필요하면 안내를 따르세요. 오프라인 PC에서는 Microsoft Evergreen Standalone Installer x64를 별도로 준비해 먼저 설치합니다. ZIP 및 Install.ps1은 런타임 자동 설치 대상이 아닙니다. .NET은 계속 자체 포함합니다.
+
+개발자는 `Windows/scripts/Test-WebView2Setup.ps1`로 자동 설치 흐름과 서명 정책의 격리 검사를 실행할 수 있습니다. WebView2 미설치 가상 PC에서 새 설치·오프라인 실패·재시도를 추가로 확인한 뒤 정식 배포하세요.
+
+### 현재 공개 설치판
+
 일반 사용자는 [공개 Releases](https://github.com/thlee/mdbom/releases)의 `MDBom-<버전>-Setup-x64.exe`를 내려받아 실행합니다. Actions는 비활성화 상태입니다. Windows에서 로컬 빌드·실행·설치 검증을 완료한 파일을 Releases에 별도로 게시합니다. 현재 공개 설치판은 1.0입니다.
 
 - 현재 사용자에 설치되며 관리자 권한이 필요하지 않습니다.
