@@ -8,6 +8,10 @@ on:
         default: all
         type: choice
         options: [all, windows, macos]
+      clean_webview2:
+        description: Verify real missing WebView2 install on disposable Windows runner
+        type: boolean
+        default: false
 concurrency:
   group: desktop-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
@@ -88,8 +92,22 @@ jobs:
         shell: pwsh
         run: ./Windows/scripts/Build-Installer.ps1 -PublishDirectory dist/MDBom-win-x64 -OutputDirectory dist/installer
       - name: Verify installer lifecycle
+        if: ${{ !inputs.clean_webview2 }}
         shell: pwsh
         run: ./Windows/scripts/Test-Installer.ps1 -Installer (Get-ChildItem dist/installer/*-Setup-x64.exe).FullName
+      - name: Test WebView2 setup logic
+        shell: powershell
+        run: ./Windows/scripts/Test-WebView2Setup.ps1
+      - name: Verify missing WebView2 and offline retry
+        if: ${{ inputs.clean_webview2 }}
+        shell: pwsh
+        run: ./Windows/scripts/Test-WebView2CleanMachine.ps1 -Installer (Get-ChildItem dist/installer/*-Setup-x64.exe).FullName
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() && inputs.clean_webview2 }}
+        with:
+          retention-days: 3
+          name: WebView2-clean-machine-verification
+          path: dist/webview2-clean-machine
       - uses: actions/upload-artifact@v4
         with:
           retention-days: 3
