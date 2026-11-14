@@ -23,6 +23,9 @@ function Receive-WebView2Bootstrapper([string]$Path) {
 }
 
 function Confirm-WebView2Signature([string]$Path) {
+    # A PowerShell 7 parent can pass its PSModulePath to Windows PowerShell 5.1.
+    # Load this engine's inbox module instead of an incompatible parent module.
+    Import-Module (Join-Path $PSHOME 'Modules\Microsoft.PowerShell.Security\Microsoft.PowerShell.Security.psd1') -ErrorAction Stop
     $signature = Get-AuthenticodeSignature -LiteralPath $Path
     if ($signature.Status -ne 'Valid' -or $null -eq $signature.SignerCertificate -or
         $signature.SignerCertificate.Subject -notmatch '(^|,\s*)O=Microsoft Corporation(,|$)') {
